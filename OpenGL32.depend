@@ -1,0 +1,139 @@
+# depslib dependency file v1.0
+1373600700 source:c:\users\brandon\desktop\opengl32\exports.cpp
+	"Exports.hpp"
+
+1373598919 c:\users\brandon\desktop\opengl32\exports.hpp
+	<GL/gl.h>
+	<GL/glext.h>
+	<stdexcept>
+	"Platform.hpp"
+
+1373599504 c:\users\brandon\desktop\opengl32\platform.hpp
+	<windows.h>
+	<dlfcn.h>
+	<string>
+	<cstdint>
+	<stdexcept>
+
+1373599547 source:c:\users\brandon\desktop\opengl32\platform.cpp
+	"Platform.hpp"
+
+1373604886 source:c:\users\brandon\desktop\opengl32\main.cpp
+	"Hooks.hpp"
+
+1373604925 source:c:\users\brandon\desktop\opengl32\hooks.cpp
+	"Hooks.hpp"
+
+1373604913 c:\users\brandon\desktop\opengl32\hooks.hpp
+	<cstring>
+	<vector>
+	<memory>
+	"Exports.hpp"
+	"SharedMemory.hpp"
+
+1373602594 c:\users\brandon\desktop\opengl32\sharedmemory.hpp
+	<windows.h>
+	<sys/types.h>
+	<sys/mman.h>
+	<dlfcn.h>
+	<fcntl.h>
+	<unistd.h>
+	<tchar.h>
+	<iostream>
+	<map>
+
+1373602609 source:c:\users\brandon\desktop\opengl32\sharedmemory.cpp
+	"SharedMemory.hpp"
+
+1373738529 source:c:\users\brandon\desktop\colour only opengl\opengl32\exports.cpp
+	"Exports.hpp"
+
+1373738433 c:\users\brandon\desktop\colour only opengl\opengl32\exports.hpp
+	<GL/gl.h>
+	<GL/glext.h>
+	<stdexcept>
+	"Platform.hpp"
+
+1373739869 c:\users\brandon\desktop\colour only opengl\opengl32\platform.hpp
+	<windows.h>
+	<dlfcn.h>
+	<string>
+	<cstdint>
+	<stdexcept>
+
+1374103093 source:c:\users\brandon\desktop\colour only opengl\opengl32\main.cpp
+	"Hooks.hpp"
+
+1374102934 c:\users\brandon\desktop\colour only opengl\opengl32\hooks.hpp
+	<cstring>
+	<vector>
+	<memory>
+	"Exports.hpp"
+	"SmartJNI.hpp"
+	"SharedMemory.hpp"
+	"SMARTPlugin.hpp"
+
+1373742141 c:\users\brandon\desktop\colour only opengl\opengl32\sharedmemory.hpp
+	<windows.h>
+	<sys/types.h>
+	<sys/mman.h>
+	<dlfcn.h>
+	<fcntl.h>
+	<unistd.h>
+	<tchar.h>
+	<iostream>
+	<map>
+
+1373739941 source:c:\users\brandon\desktop\colour only opengl\opengl32\platform.cpp
+	"Platform.hpp"
+
+1373742134 source:c:\users\brandon\desktop\colour only opengl\opengl32\sharedmemory.cpp
+	"SharedMemory.hpp"
+
+1374035120 c:\users\brandon\desktop\colour only opengl\opengl32\smartjni.hpp
+	"jni.h"
+	"Exports.hpp"
+
+1374103837 source:c:\users\brandon\desktop\colour only opengl\opengl32\hooks.cpp
+	"Hooks.hpp"
+
+1363387910 c:\users\brandon\desktop\colour only opengl\opengl32\jni.h
+	<stdio.h>
+	<stdarg.h>
+	"jni_md.h"
+
+1363387910 c:\users\brandon\desktop\colour only opengl\opengl32\jni_md.h
+
+1374103863 source:c:\users\brandon\desktop\colour only opengl\opengl32\smartjni.cpp
+	"SmartPlugin.hpp"
+	"Hooks.hpp"
+	<iostream>
+	"Bitmap.h"
+
+1374036881 c:\users\brandon\desktop\colour only opengl\opengl32\bitmap.h
+	<iostream>
+	<fstream>
+	<vector>
+	<stdexcept>
+
+1374036869 source:c:\users\brandon\desktop\colour only opengl\opengl32\bitmap.cpp
+	"Bitmap.h"
+
+1374105542 c:\users\brandon\desktop\colour only opengl\opengl32\smartplugin.hpp
+
+1373738529 source:c:\users\brandon\documents\github\glx-colour\opengl32\exports.cpp
+	"Exports.hpp"
+
+1373738433 c:\users\brandon\documents\github\glx-colour\opengl32\exports.hpp
+	<GL/gl.h>
+	<GL/glext.h>
+	<stdexcept>
+	"Platform.hpp"
+
+1373739869 c:\users\brandon\documents\github\glx-colour\opengl32\platform.hpp
+	<windows.h>
+	<dlfcn.h>
+	<string>
+	<cstdint>
+	<stdexcept>
+
