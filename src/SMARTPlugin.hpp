@@ -1,3 +1,20 @@
+/**  © 2013, Brandon T. All Rights Reserved.
+  *
+  *  This file is part of the GLX Library.
+  *  GLX is free software: you can redistribute it and/or modify
+  *  it under the terms of the GNU General Public License as published by
+  *  the Free Software Foundation, either version 3 of the License, or
+  *  (at your option) any later version.
+  *
+  *  GLX is distributed in the hope that it will be useful,
+  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  *  GNU General Public License for more details.
+  *
+  *  You should have received a copy of the GNU General Public License
+  *  along with GLX.  If not, see <http://www.gnu.org/licenses/>.
+  */
+
 #ifndef _SMART_PLUGIN
 #define _SMART_PLUGIN
 
@@ -6,11 +23,11 @@ typedef void (*_SMARTSetCapture)(bool enabled);
 
 typedef struct
 {
-    int version; //Version of SMART to ensure binary compatibility
-    void *img, *dbg; //Pointer to the memory location of the img (to simba) and dbg (from simba) colors
-    int width, height; //Dimensions of client
-    _SMARTGetMousePos getMousePos; //Callback to get the current fake mouse position
-    _SMARTSetCapture setCapture; //Callback to turn set SMART's capture mode
+    int version; 
+    void *img, *dbg; 
+    int width, height; 
+    _SMARTGetMousePos getMousePos;
+    _SMARTSetCapture setCapture; 
 } SMARTInfo;
 
 typedef void (*_SMARTPluginInit)(SMARTInfo *ptr);

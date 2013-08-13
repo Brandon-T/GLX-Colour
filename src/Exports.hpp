@@ -1,3 +1,20 @@
+/**  © 2013, Brandon T. All Rights Reserved.
+  *
+  *  This file is part of the GLX Library.
+  *  GLX is free software: you can redistribute it and/or modify
+  *  it under the terms of the GNU General Public License as published by
+  *  the Free Software Foundation, either version 3 of the License, or
+  *  (at your option) any later version.
+  *
+  *  GLX is distributed in the hope that it will be useful,
+  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  *  GNU General Public License for more details.
+  *
+  *  You should have received a copy of the GNU General Public License
+  *  along with GLX.  If not, see <http://www.gnu.org/licenses/>.
+  */
+
 #ifndef EXPORTS_HPP_INCLUDED
 #define EXPORTS_HPP_INCLUDED
 
@@ -6,32 +23,10 @@
 #include <stdexcept>
 #include "Platform.hpp"
 
-/** @file Exports.cpp */
-
-
-/** @brief Global Pointer of a Library class instance.
- *
- */
 extern Library* OriginalGL;
-
-
-/** @brief  Loads the OpenGL32 library Initializes all function pointers/detours.
- *
- * @return  Whether or not all function pointers/detours were initialized successfully.
- *
- */
 extern "C" bool __stdcall Initialize(void);
-
-/** @brief Unloads the OpenGL32 library and Zero's out all function pointers.
- *
- * @return Whether or not all function pointers/detours were un-initialized successfully.
- *
- */
 extern "C" bool __stdcall DeInitialize(void);
 
-
-/** @cond INTERNAL
- */
 extern void (__stdcall *ptr_glAccum) (GLenum op, GLfloat value);
 extern void (__stdcall *ptr_glActiveTextureARB) (GLenum texture);
 extern void (__stdcall *ptr_glAlphaFunc) (GLenum func, GLclampf ref);
@@ -403,7 +398,5 @@ extern BOOL (__stdcall *ptr_wglUseFontBitmapsA) (HDC hdc, DWORD first, DWORD cou
 extern BOOL (__stdcall *ptr_wglUseFontOutlinesW) (HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf);
 extern BOOL (__stdcall *ptr_wglUseFontOutlinesA) (HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf);
 #endif
-/** @endcond
- */
 
 #endif // EXPORTS_HPP_INCLUDED

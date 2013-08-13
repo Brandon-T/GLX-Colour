@@ -1,17 +1,27 @@
-#include "Hooks.hpp"
+/**  © 2013, Brandon T. All Rights Reserved.
+  *
+  *  This file is part of the GLX Library.
+  *  GLX is free software: you can redistribute it and/or modify
+  *  it under the terms of the GNU General Public License as published by
+  *  the Free Software Foundation, either version 3 of the License, or
+  *  (at your option) any later version.
+  *
+  *  GLX is distributed in the hope that it will be useful,
+  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  *  GNU General Public License for more details.
+  *
+  *  You should have received a copy of the GNU General Public License
+  *  along with GLX.  If not, see <http://www.gnu.org/licenses/>.
+  */
 
-/** @file Hooks.hpp */
+#include "Hooks.hpp"
 
 std::unique_ptr<SharedMemory> SharedImageData;
 std::unique_ptr<SharedMemory> SharedDebugData;
 const char* SharedImageName = "Local\\GLHookImage";
 const char* SharedDebugName = "Local\\GLHookDebug";
 
-/** @brief Retrieves the current Process's Identifier.
- *
- * @return The current Process-ID prepended with an underscore. Ex: _1024
- *
- */
 std::string GetProcessID()
 {
     return "_" + std::to_string(getpid());
@@ -60,15 +70,6 @@ bool UnMapSharedMemory()
     return true;
 }
 
-/** @brief Flips a given buffer/image and stores it in the specified output buffer.
- *
- * @param[in] In            Specifies the input buffer which holds the image pixels.
- * @param[out] Out          Specifies the output buffer in which the flipped image pixels will be stored. Input & Output must not point to the same memory location!
- * @param[in] width         Width of the image to flip.
- * @param[in] height        Height of the image to flip.
- * @param[in] Bpp           Bits-Per-Pixel of the specified Image. Can: be 24/32.
- *
- */
 void FlipImageBytes(void* In, void* &Out, int width, int height, uint32_t Bpp = 32)
 {
    unsigned long Chunk = (Bpp > 24 ? width * 4 : width * 3 + width % 4);
@@ -83,15 +84,6 @@ void FlipImageBytes(void* In, void* &Out, int width, int height, uint32_t Bpp = 
    }
 }
 
-/** @brief Enables 2-D drawing onto the screen.
- *
- * @param[out] DrawingEnabled            A boolean in which the result of this function will be stored.
- * @param[out] GLTexture2D               A boolean that will hold whether or not GL_TEXTURE_2D is enabled.
- * @param[out] GLRectangleTexture        A boolean that will hold whether or not GL_TEXTURE_RECTANGLE is enabled.
- * @param[out] PointSmooth               A boolean that will hold whether or not GL_POINT_SMOOTH is enabled.
- * @param[out] PointSize                 A floating point variable that will hold the current Point-Size.
- *
- */
 void EnableDrawing(bool &GLTexture2D, bool &GLRectangleTexture, bool &PointSmooth, float &PointSize)
 {
     GLTexture2D = glIsEnabled(GL_TEXTURE_2D);
@@ -108,16 +100,6 @@ void EnableDrawing(bool &GLTexture2D, bool &GLRectangleTexture, bool &PointSmoot
     glLoadIdentity();
 }
 
-
-/** @brief Disables Drawing after a call to EnableDrawing. Must be called after all rendering is finished.
- *
- * @param[in] DrawingEnabled           A boolean that holds the result of EnableDrawing and will hold the result of this function.
- * @param[in] GLTexture2D              A boolean that will hold whether or not GL_TEXTURE_2D was enabled.
- * @param[in] GLRectangleTexture       A boolean that will hold whether or not GL_TEXTURE_RECTANGLE was enabled.
- * @param[in] PointSmooth              A boolean indicating whether or not GL_POINT_SMOOTH was enabled.
- * @param[in] PointSize                A floating point variable that holds the previous Point-Size.
- *
- */
 void DisableDrawing(bool GLTexture2D, bool GLRectangleTexture, bool PointSmooth, float PointSize)
 {
     glPopMatrix();

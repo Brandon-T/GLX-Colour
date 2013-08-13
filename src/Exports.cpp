@@ -1,11 +1,24 @@
-#include "Exports.hpp"
+/**  © 2013, Brandon T. All Rights Reserved.
+  *
+  *  This file is part of the GLX Library.
+  *  GLX is free software: you can redistribute it and/or modify
+  *  it under the terms of the GNU General Public License as published by
+  *  the Free Software Foundation, either version 3 of the License, or
+  *  (at your option) any later version.
+  *
+  *  GLX is distributed in the hope that it will be useful,
+  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  *  GNU General Public License for more details.
+  *
+  *  You should have received a copy of the GNU General Public License
+  *  along with GLX.  If not, see <http://www.gnu.org/licenses/>.
+  */
 
-/** @file Exports.hpp */
+#include "Exports.hpp"
 
 Library* OriginalGL = nullptr;
 
-/** @cond INTERNAL
- */
 void (__stdcall *ptr_glAccum) (GLenum op, GLfloat value);
 void (__stdcall *ptr_glActiveTextureARB) (GLenum texture);
 void (__stdcall *ptr_glAlphaFunc) (GLenum func, GLclampf ref);
@@ -377,8 +390,6 @@ BOOL (__stdcall *ptr_wglUseFontBitmapsA) (HDC hdc, DWORD first, DWORD count, DWO
 BOOL (__stdcall *ptr_wglUseFontOutlinesW) (HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf);
 BOOL (__stdcall *ptr_wglUseFontOutlinesA) (HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf);
 #endif
-/** @endcond
- */
 
 
 bool __stdcall Initialize(void)
@@ -780,8 +791,6 @@ bool __stdcall DeInitialize(void)
 	return false;
 }
 
-/** @cond INTERNAL
- */
 extern "C" __stdcall void GLHook_glAccum(GLenum op, GLfloat value)
 {
 	ptr_glAccum(op, value);
@@ -2616,5 +2625,3 @@ extern "C" __stdcall BOOL GLHook_wglUseFontOutlinesA(HDC hdc, DWORD first, DWORD
 {
 	return ptr_wglUseFontOutlinesA(hdc, first, count, listBase, deviation, extrusion, format, lpgmf);
 }
-/** @endcond
- */

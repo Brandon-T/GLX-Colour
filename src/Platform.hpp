@@ -1,3 +1,20 @@
+/**  © 2013, Brandon T. All Rights Reserved.
+  *
+  *  This file is part of the GLX Library.
+  *  GLX is free software: you can redistribute it and/or modify
+  *  it under the terms of the GNU General Public License as published by
+  *  the Free Software Foundation, either version 3 of the License, or
+  *  (at your option) any later version.
+  *
+  *  GLX is distributed in the hope that it will be useful,
+  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  *  GNU General Public License for more details.
+  *
+  *  You should have received a copy of the GNU General Public License
+  *  along with GLX.  If not, see <http://www.gnu.org/licenses/>.
+  */
+
 #ifndef PLATFORM_HPP_INCLUDED
 #define PLATFORM_HPP_INCLUDED
 
@@ -11,55 +28,21 @@
 #include <cstdint>
 #include <stdexcept>
 
-/** @file Platform.cpp */
-
-/** @brief A class for loading Dynamic/Shared Libraries and importing their functions.
- */
 class Library
 {
     private:
         void* Module;
 
     public:
-        /** @brief Library Constructor: Constructs a new Library Object.
-         *
-         * @param[in] Library A string specifying the path to the library to load.
-         *
-         */
         Library(std::string Library);
-
-        /** @brief Library Destructor: Destroys the Library Object and unloads the internal loaded library specified during construction.
-         *
-         */
         ~Library();
 
-        /** @brief Retrieves a function's address from the loaded library and casts it to the specified function pointer.
-         *
-         * @param[in] FunctionName  The name of the function whose address to retrieve.
-         * @return    The function pointer to which address is casted.
-         *
-         */
         template<typename T>
         T FunctionAddress(std::string FunctionName);
 
-        /** @brief Retrieves a function address from the loaded library and casts it to the specified function pointer.
-         *
-         * @param[out] FunctionDefinition  The function pointer that will receive the address of the specified function.
-         * @param[in] FunctionName         The name of the function whose address to retrieve.
-         * @return                         A boolean indication whether or not the address was retrieved successfully.
-         *
-         */
         template<typename T>
         bool FunctionAddress(T &FunctionDefinition, std::string FunctionName);
 
-
-        /** @brief Calls a function pointer with the specified arguments.
-         *
-         * @param Function  A pointer to the function to be called.
-         * @param args      The arguments to pass to the specified function pointer.
-         * @return          The return value specified by the function pointer.
-         *
-         */
         template<typename T, typename ...Args>
         auto CallFunction(void* Function, Args... args) -> decltype(reinterpret_cast<T>(Function)(args...));
 };
