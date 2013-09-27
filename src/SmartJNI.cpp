@@ -22,13 +22,51 @@
 
 unsigned int Texture = 0;
 SMARTInfo* SmartGlobal = nullptr;
+bool SmartDebugEnabled = false;
+bool SmartOpenGLEnabled = true;
 
-extern "C" void SMARTPluginInit(SMARTInfo *ptr)
+void SMARTButtonPressed(int ID, bool State)
+{
+    switch(ID)
+    {
+        case 100:
+            if (State)
+            {
+                SmartGlobal->setCapture(false);
+                SmartOpenGLEnabled = true;
+            }
+            else
+            {
+                SmartGlobal->setCapture(true);
+                SmartOpenGLEnabled = false;
+            }
+            break;
+
+        case 101:
+            SmartDebugEnabled = State ? false : true;
+            break;
+
+    }
+}
+
+extern "C" void SMARTPluginInit(SMARTInfo* ptr, bool* ReplaceButtons, int* ButtonCount, char*** ButtonText, int** ButtonIDs, _SMARTButtonPressed* ButtonCallback)
 {
     SmartGlobal = ptr;
     if (ptr)
     {
-        SmartGlobal->setCapture(false);
+        *ReplaceButtons = true;
+        char** ButtonTexts = new char*[2];
+        ButtonTexts[0] = const_cast<char*>("Disable OpenGL_Enable OpenGL");
+        ButtonTexts[1] = const_cast<char*>("Enable Debug_Disable Debug");
+
+        int* IDs = new int[2];
+        IDs[0] = 100;
+        IDs[1] = 101;
+
+        *ButtonCount = 2;
+        *ButtonText = ButtonTexts;
+        *ButtonIDs = IDs;
+        *ButtonCallback = &SMARTButtonPressed;
     }
 }
 
@@ -36,7 +74,21 @@ void BltSmartBuffer()
 {
     if (SmartGlobal != nullptr)
     {
-        GLuint Texture = LoadTexture(SmartGlobal->dbg, SmartGlobal->width, SmartGlobal->height, GL_TEXTURE_RECTANGLE);
+        if (Texture == 0)
+        {
+            Texture = LoadTexture(SmartGlobal->dbg, SmartGlobal->width, SmartGlobal->height, GL_TEXTURE_RECTANGLE);
+        }
+        else
+        {
+            std::vector<std::uint8_t> Pixels(SmartGlobal->width * SmartGlobal->height * 4);
+            void* P = Pixels.data();
+            FlipImageBytes(SmartGlobal->dbg, P, SmartGlobal->width, SmartGlobal->height);
+            glEnable(GL_TEXTURE_RECTANGLE);
+            glBindTexture(GL_TEXTURE_RECTANGLE, Texture);
+            glTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, SmartGlobal->width, SmartGlobal->height, GL_BGRA, GL_UNSIGNED_BYTE, Pixels.data());
+            glDisable(GL_TEXTURE_RECTANGLE);
+        }
+
         std::uint8_t* Ptr = (std::uint8_t*)SmartGlobal->dbg;
         for (int I = 0; I < SmartGlobal->height; ++I)
         {
@@ -50,6 +102,5 @@ void BltSmartBuffer()
         }
 
         DrawTexture(GL_TEXTURE_RECTANGLE, Texture, 0, 0, SmartGlobal->width, SmartGlobal->height, SmartGlobal->width, SmartGlobal->height);
-        glDeleteTextures(1, &Texture);
     }
 }

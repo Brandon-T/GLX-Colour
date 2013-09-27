@@ -48,19 +48,18 @@
 				</Linker>
 			</Target>
 		</Build>
-		<Unit filename="Exports.cpp" />
-		<Unit filename="Exports.hpp" />
-		<Unit filename="Hooks.cpp" />
-		<Unit filename="Hooks.hpp" />
 		<Unit filename="OpenGL32.def" />
-		<Unit filename="Platform.cpp" />
-		<Unit filename="Platform.hpp" />
-		<Unit filename="SMARTPlugin.hpp" />
-		<Unit filename="SharedMemory.cpp" />
-		<Unit filename="SharedMemory.hpp" />
-		<Unit filename="SmartJNI.cpp" />
-		<Unit filename="SmartJNI.hpp" />
-		<Unit filename="main.cpp" />
+		<Unit filename="src/Exports.cpp" />
+		<Unit filename="src/Exports.hpp" />
+		<Unit filename="src/Hooks.cpp" />
+		<Unit filename="src/Hooks.hpp" />
+		<Unit filename="src/Platform.cpp" />
+		<Unit filename="src/Platform.hpp" />
+		<Unit filename="src/SMARTPlugin.hpp" />
+		<Unit filename="src/SharedMemory.cpp" />
+		<Unit filename="src/SharedMemory.hpp" />
+		<Unit filename="src/SmartJNI.cpp" />
+		<Unit filename="src/main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

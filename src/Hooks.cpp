@@ -18,9 +18,7 @@
 #include "Hooks.hpp"
 
 std::unique_ptr<SharedMemory> SharedImageData;
-std::unique_ptr<SharedMemory> SharedDebugData;
 const char* SharedImageName = "Local\\GLHookImage";
-const char* SharedDebugName = "Local\\GLHookDebug";
 
 std::string GetProcessID()
 {
@@ -40,37 +38,32 @@ void GetDesktopResolution(int &width, int &height)
 
 bool InitializeAll()
 {
-    return ((CreateSharedMemory() || OpenSharedMemory()) && Initialize());
+    return ((CreateSharedMemory(getpid()) || OpenSharedMemory(getpid())) && Initialize());
 }
 
-bool CreateSharedMemory()
+bool CreateSharedMemory(int ProcessID)
 {
     int Width = 0, Height = 0;
     GetDesktopResolution(Width, Height);
-    SharedImageData.reset(new SharedMemory(SharedImageName + GetProcessID()));
-    SharedDebugData.reset(new SharedMemory(SharedImageName + GetProcessID()));
-    std::uint32_t Size = Width || Height == 0 ? SharedImageSize : Width * Height * 4;
-    return SharedImageData->MapMemory(Size) && SharedDebugData->MapMemory(Size);
+    SharedImageData.reset(new SharedMemory(SharedImageName + std::to_string(ProcessID)));
+    return SharedImageData->MapMemory(Width || Height == 0 ? TotalImageSize : Width * Height * 4 * 2);
 }
 
-bool OpenSharedMemory()
+bool OpenSharedMemory(int ProcessID)
 {
     int Width = 0, Height = 0;
     GetDesktopResolution(Width, Height);
-    SharedImageData.reset(new SharedMemory(SharedImageName + GetProcessID()));
-    SharedDebugData.reset(new SharedMemory(SharedImageName + GetProcessID()));
-    std::uint32_t Size = Width || Height == 0 ? SharedImageSize : Width * Height * 4;
-    return SharedImageData->OpenMemoryMap(Size) && SharedDebugData->OpenMemoryMap(Size);
+    SharedImageData.reset(new SharedMemory(SharedImageName + std::to_string(ProcessID)));
+    return SharedImageData->OpenMemoryMap(Width || Height == 0 ? SharedImageSize : Width * Height * 4 * 2);
 }
 
 bool UnMapSharedMemory()
 {
     SharedImageData.reset(nullptr);
-    SharedDebugData.reset(nullptr);
     return true;
 }
 
-void FlipImageBytes(void* In, void* &Out, int width, int height, uint32_t Bpp = 32)
+void FlipImageBytes(void* In, void* &Out, int width, int height, unsigned int Bpp)
 {
    unsigned long Chunk = (Bpp > 24 ? width * 4 : width * 3 + width % 4);
    unsigned char* Destination = static_cast<unsigned char*>(Out);
@@ -151,7 +144,7 @@ void DrawTexture(std::uint32_t Target, std::uint32_t ID, float X1, float Y1, flo
 
 void BltMappedBuffer(void* buffer, int width, int height)
 {
-    GLuint Texture = LoadTexture(buffer, width, height, GL_TEXTURE_RECTANGLE);
+    Texture = LoadTexture(buffer, width, height, GL_TEXTURE_RECTANGLE);
     std::uint8_t* Ptr = (std::uint8_t*)buffer;
     for (int I = 0; I < height; ++I)
     {
@@ -173,20 +166,25 @@ BOOL GLHook_wglSwapBuffers(HDC hdc)
     GLint ViewPort[4] = {0};
     glGetIntegerv(GL_VIEWPORT, ViewPort);
     glPixelStorei(GL_PACK_ALIGNMENT, 4);
-    std::vector<std::uint8_t> Buffer(ViewPort[2] * ViewPort[3] * 4);
+    static std::vector<std::uint8_t> Buffer;
+
+    Buffer.resize(ViewPort[2] * ViewPort[3] * 4);
     glReadPixels(0, 0, ViewPort[2], ViewPort[3], GL_BGRA, GL_UNSIGNED_BYTE, Buffer.data());
 
     float PointSize = 0;
     bool Drawing[3] = {0};
-    EnableDrawing(Drawing[0], Drawing[1], Drawing[2], PointSize);
 
-    if (SmartGlobal->version)
+    if (SmartGlobal && SmartGlobal->version)
     {
         FlipImageBytes(Buffer.data(), SmartGlobal->img, ViewPort[2], ViewPort[3]);
         if (!IsIconic(WindowFromDC(hdc)))
         {
+            EnableDrawing(Drawing[0], Drawing[1], Drawing[2], PointSize);
             int X = 0, Y = 0;
-            BltSmartBuffer();
+            if (SmartDebugEnabled)
+            {
+                BltSmartBuffer();
+            }
 
             SmartGlobal->getMousePos(X, Y);
             if (X != -1 && Y != -1)
@@ -198,21 +196,26 @@ BOOL GLHook_wglSwapBuffers(HDC hdc)
                     glVertex3f(X, Y, 0);
                 glEnd();
             }
+            DisableDrawing(Drawing[0], Drawing[1], Drawing[2], PointSize);
         }
     }
     else
     {
         if (!SharedImageData || !SharedImageData->GetDataPointer())
         {
-            CreateSharedMemory() || OpenSharedMemory();
+            CreateSharedMemory(getpid()) || OpenSharedMemory(getpid());
         }
-        void* Ptr = SharedImageData->GetDataPointer();
-        FlipImageBytes(Buffer.data(), Ptr, ViewPort[2], ViewPort[3]);
-        if (!IsIconic(WindowFromDC(hdc)))
-            BltMappedBuffer(Ptr, ViewPort[2], ViewPort[3]);
-    }
 
-    DisableDrawing(Drawing[0], Drawing[1], Drawing[2], PointSize);
+        void* ImgPtr = SharedImageData->GetDataPointer();
+        FlipImageBytes(Buffer.data(), ImgPtr, ViewPort[2], ViewPort[3]);
+        if (!IsIconic(WindowFromDC(hdc)))
+        {
+            EnableDrawing(Drawing[0], Drawing[1], Drawing[2], PointSize);
+            void* DbgPtr = reinterpret_cast<std::uint8_t*>(SharedImageData->GetDataPointer()) + SharedImageSize;
+            BltMappedBuffer(DbgPtr, ViewPort[2], ViewPort[3]);
+            DisableDrawing(Drawing[0], Drawing[1], Drawing[2], PointSize);
+        }
+    }
 
 	return ptr_wglSwapBuffers(hdc);
 }

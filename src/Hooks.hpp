@@ -25,27 +25,26 @@
 #include "SharedMemory.hpp"
 #include "SMARTPlugin.hpp"
 
-#define SharedImageSize 8294400
+#define SharedImageSize     8294400     //Highest Resolution Support: 1920 x 1080 x sizeof(RGBA)
+#define TotalImageSize      (SharedImageSize * 2)  //Image + DebugImage
 
 extern const char* SharedImageName;
-extern const char* SharedDebugName;
 extern std::unique_ptr<SharedMemory> SharedImageData;
-extern std::unique_ptr<SharedMemory> SharedDebugData;
 
 extern void GetDesktopResolution(int &width, int &height);
 
 extern bool InitializeAll();
 
-extern bool CreateSharedMemory();
+extern bool CreateSharedMemory(int ProcessId);
 
-extern bool OpenSharedMemory();
+extern bool OpenSharedMemory(int ProcessId);
 
 extern bool UnMapSharedMemory();
 
 GLuint LoadTexture(void* Buffer, int width, int height, GLenum Target);
- 
+
 void DrawTexture(std::uint32_t Target, std::uint32_t ID, float X1, float Y1, float X2, float Y2, int Width, int Height);
- 
+
 extern "C" __stdcall BOOL GLHook_wglSwapBuffers(HDC hdc);
 
 #endif // HOOKS_HPP_INCLUDED
