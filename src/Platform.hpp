@@ -22,6 +22,7 @@
 #include <windows.h>
 #else
 #include <dlfcn.h>
+#define __stdcall
 #endif
 
 #include <string>
@@ -34,7 +35,7 @@ class Library
         void* Module;
 
     public:
-        Library(std::string Library);
+        Library(std::string library);
         ~Library();
 
         template<typename T>

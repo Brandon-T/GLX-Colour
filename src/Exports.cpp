@@ -92,7 +92,7 @@ void (__stdcall *ptr_glDrawArrays) (GLenum mode, GLint first, GLsizei count);
 void (__stdcall *ptr_glDrawBuffer) (GLenum mode);
 void (__stdcall *ptr_glDrawElements) (GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
 void (__stdcall *ptr_glDrawPixels) (GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
-void (__stdcall *ptr_glDebugEntry) (DWORD dwArg1, DWORD dwArg2);
+//void (__stdcall *ptr_glDebugEntry) (DWORD dwArg1, DWORD dwArg2);
 void (__stdcall *ptr_glEdgeFlag) (GLboolean flag);
 void (__stdcall *ptr_glEdgeFlagv) (const GLboolean *flag);
 void (__stdcall *ptr_glEdgeFlagPointer) (GLsizei stride, const GLvoid *pointer);
@@ -389,22 +389,42 @@ BOOL (__stdcall *ptr_wglUseFontBitmapsW) (HDC hdc, DWORD first, DWORD count, DWO
 BOOL (__stdcall *ptr_wglUseFontBitmapsA) (HDC hdc, DWORD first, DWORD count, DWORD listBase);
 BOOL (__stdcall *ptr_wglUseFontOutlinesW) (HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf);
 BOOL (__stdcall *ptr_wglUseFontOutlinesA) (HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf);
+
+#else
+
+XVisualInfo* (*ptr_glXChooseVisual) (Display* dpy, int screen, int* attribList);
+GLXContext (*ptr_glXCreateContext) (Display* dpy, XVisualInfo* vis, GLXContext shareList, Bool direct);
+void (*ptr_glXDestroyContext) (Display* dpy, GLXContext ctx);
+Bool (*ptr_glXMakeCurrent) (Display* dpy, GLXDrawable drawable, GLXContext ctx);
+void (*ptr_glXCopyContext) (Display* dpy, GLXContext src, GLXContext dst, unsigned long mask);
+void (*ptr_glXSwapBuffers) (Display* dpy, GLXDrawable drawable);
+GLXPixmap (*ptr_glXCreateGLXPixmap) (Display* dpy, XVisualInfo* visual, Pixmap pixmap);
+void (*ptr_glXDestroyGLXPixmap) (Display* dpy, GLXPixmap pixmap);
+Bool (*ptr_glXQueryExtension) (Display* dpy, int* errorb, int* event);
+Bool (*ptr_glXQueryVersion) (Display* dpy, int* maj, int* min);
+Bool (*ptr_glXIsDirect) (Display* dpy, GLXContext ctx);
+int (*ptr_glXGetConfig) (Display* dpy, XVisualInfo* visual, int attrib, int* value);
+GLXContext (*ptr_glXGetCurrentContext) (void);
+GLXDrawable (*ptr_glXGetCurrentDrawable) (void);
+void (*ptr_glXWaitGL) (void);
+void (*ptr_glXWaitX) (void);
+void (*ptr_glXUseXFont) (Font font, int first, int count, int list);
 #endif
 
 
 bool __stdcall Initialize(void)
 {
-    char Root[MAX_PATH];
+    char Root[256];
     #if defined _WIN32 || defined _WIN64
-        GetSystemDirectoryA(Root, MAX_PATH);
+        GetSystemDirectoryA(Root, 256);
     #ifdef _MSC_VER
-        strcat_s(Root, "\\opengl32.dll");
+        std::strcat_s(Root, "\\opengl32.dll");
     #else
-        strcat(Root, "\\opengl32.dll");
+        std::strcat(Root, "\\opengl32.dll");
     #endif
     #else
-        strcat(Root, "/usr/lib");
-        strcat(Root, "/libGL.so");
+        std::strcat(Root, "/usr/lib");
+        std::strcat(Root, "/libGL.so");
     #endif
 
     OriginalGL = new Library(Root);
@@ -479,7 +499,7 @@ bool __stdcall Initialize(void)
 		OriginalGL->FunctionAddress(ptr_glDrawBuffer, "glDrawBuffer");
 		OriginalGL->FunctionAddress(ptr_glDrawElements, "glDrawElements");
 		OriginalGL->FunctionAddress(ptr_glDrawPixels, "glDrawPixels");
-		OriginalGL->FunctionAddress(ptr_glDebugEntry, "glDebugEntry");
+		//OriginalGL->FunctionAddress(ptr_glDebugEntry, "glDebugEntry");
 		OriginalGL->FunctionAddress(ptr_glEdgeFlag, "glEdgeFlag");
 		OriginalGL->FunctionAddress(ptr_glEdgeFlagv, "glEdgeFlagv");
 		OriginalGL->FunctionAddress(ptr_glEdgeFlagPointer, "glEdgeFlagPointer");
@@ -747,6 +767,8 @@ bool __stdcall Initialize(void)
 		OriginalGL->FunctionAddress(ptr_glVertex4sv, "glVertex4sv");
 		OriginalGL->FunctionAddress(ptr_glVertexPointer, "glVertexPointer");
 		OriginalGL->FunctionAddress(ptr_glViewport, "glViewport");
+
+		#if defined _WIN32 || defined _WIN64
 		OriginalGL->FunctionAddress(ptr_wglChoosePixelFormat, "wglChoosePixelFormat");
 		OriginalGL->FunctionAddress(ptr_wglCreateContext, "wglCreateContext");
 		OriginalGL->FunctionAddress(ptr_wglCreateLayerContext, "wglCreateLayerContext");
@@ -772,6 +794,27 @@ bool __stdcall Initialize(void)
 		OriginalGL->FunctionAddress(ptr_wglUseFontBitmapsA, "wglUseFontBitmapsA");
 		OriginalGL->FunctionAddress(ptr_wglUseFontOutlinesW, "wglUseFontOutlinesW");
 		OriginalGL->FunctionAddress(ptr_wglUseFontOutlinesA, "wglUseFontOutlinesA");
+
+		#else
+
+        OriginalGL->FunctionAddress(ptr_glXChooseVisual, "glXChooseVisual");
+        OriginalGL->FunctionAddress(ptr_glXCreateContext, "glXCreateContext");
+        OriginalGL->FunctionAddress(ptr_glXDestroyContext, "glXDestroyContext");
+        OriginalGL->FunctionAddress(ptr_glXMakeCurrent, "glXMakeCurrent");
+        OriginalGL->FunctionAddress(ptr_glXCopyContext, "glXCopyContext");
+        OriginalGL->FunctionAddress(ptr_glXSwapBuffers, "glXSwapBuffers");
+        OriginalGL->FunctionAddress(ptr_glXDestroyGLXPixmap, "glXDestroyGLXPixmap");
+        OriginalGL->FunctionAddress(ptr_glXQueryExtension, "glXQueryExtension");
+        OriginalGL->FunctionAddress(ptr_glXQueryVersion, "glXQueryVersion");
+        OriginalGL->FunctionAddress(ptr_glXIsDirect, "glXIsDirect");
+        OriginalGL->FunctionAddress(ptr_glXGetConfig, "glXGetConfig");
+        OriginalGL->FunctionAddress(ptr_glXGetCurrentContext, "glXGetCurrentContext");
+        OriginalGL->FunctionAddress(ptr_glXGetCurrentDrawable, "glXGetCurrentDrawable");
+        OriginalGL->FunctionAddress(ptr_glXWaitGL, "glXWaitGL");
+        OriginalGL->FunctionAddress(ptr_glXWaitX, "glXWaitX");
+        OriginalGL->FunctionAddress(ptr_glXUseXFont, "glXUseXFont");
+        OriginalGL->FunctionAddress(ptr_glXIsDirect, "glXIsDirect");
+		#endif
 	}
 	catch(std::exception &e)
 	{
@@ -1156,10 +1199,10 @@ extern "C" __stdcall void GLHook_glDrawPixels(GLsizei width, GLsizei height, GLe
 	ptr_glDrawPixels(width, height, format, type, pixels);
 }
 
-extern "C" __stdcall void GLHook_glDebugEntry(DWORD dwArg1, DWORD dwArg2)
+/*extern "C" __stdcall void GLHook_glDebugEntry(DWORD dwArg1, DWORD dwArg2)
 {
 	ptr_glDebugEntry(dwArg1, dwArg2);
-}
+}*/
 
 extern "C" __stdcall void GLHook_glEdgeFlag(GLboolean flag)
 {
@@ -2506,6 +2549,7 @@ extern "C" __stdcall void GLHook_glViewport(GLint x, GLint y, GLsizei width, GLs
 	ptr_glViewport(x, y, width, height);
 }
 
+#if defined _WIN32 || defined _WIN64
 extern "C" __stdcall int GLHook_wglChoosePixelFormat(HDC hdc, const PIXELFORMATDESCRIPTOR *ppfd)
 {
 	return ptr_wglChoosePixelFormat(hdc, ppfd);
@@ -2625,3 +2669,91 @@ extern "C" __stdcall BOOL GLHook_wglUseFontOutlinesA(HDC hdc, DWORD first, DWORD
 {
 	return ptr_wglUseFontOutlinesA(hdc, first, count, listBase, deviation, extrusion, format, lpgmf);
 }
+
+#else
+
+extern XVisualInfo* GLHook_glXChooseVisual(Display* dpy, int screen, int* attribList)
+{
+    return ptr_glXChooseVisual(dpy, screen, attribList);
+}
+
+extern GLXContext GLHook_glXCreateContext(Display* dpy, XVisualInfo* vis, GLXContext shareList, Bool direct)
+{
+    return ptr_glXCreateContext(dpy, vis, shareList, direct);
+}
+
+extern void GLHook_glXDestroyContext(Display* dpy, GLXContext ctx)
+{
+    return ptr_glXDestroyContext(dpy, ctx);
+}
+
+extern Bool GLHook_glXMakeCurrent(Display* dpy, GLXDrawable drawable, GLXContext ctx)
+{
+    return ptr_glXMakeCurrent(dpy, drawable, ctx);
+}
+
+extern void GLHook_glXCopyContext(Display* dpy, GLXContext src, GLXContext dst, unsigned long mask)
+{
+    return ptr_glXCopyContext(dpy, src, dst, mask);
+}
+
+extern void GLHook_glXSwapBuffers(Display* dpy, GLXDrawable drawable)
+{
+    return ptr_glXSwapBuffers(dpy, drawable);
+}
+
+extern GLXPixmap GLHook_glXCreateGLXPixmap(Display* dpy, XVisualInfo* visual, Pixmap pixmap)
+{
+    return ptr_glXCreateGLXPixmap(dpy, visual, pixmap);
+}
+
+extern void GLHook_glXDestroyGLXPixmap(Display* dpy, GLXPixmap pixmap)
+{
+    return ptr_glXDestroyGLXPixmap(dpy, pixmap);
+}
+
+extern Bool GLHook_glXQueryExtension(Display* dpy, int* errorb, int* event)
+{
+    return ptr_glXQueryExtension(dpy, errorb, event);
+}
+
+extern Bool GLHook_glXQueryVersion(Display* dpy, int* maj, int* min)
+{
+    return ptr_glXQueryVersion(dpy, maj, min);
+}
+
+extern Bool GLHook_glXIsDirect(Display* dpy, GLXContext ctx)
+{
+    return ptr_glXIsDirect(dpy, ctx);
+}
+
+extern int GLHook_glXGetConfig(Display* dpy, XVisualInfo* visual, int attrib, int* value)
+{
+    return ptr_glXGetConfig(dpy, visual, attrib, value);
+}
+
+extern GLXContext GLHook_glXGetCurrentContext(void)
+{
+    return ptr_glXGetCurrentContext();
+}
+
+extern GLXDrawable GLHook_glXGetCurrentDrawable(void)
+{
+    return ptr_glXGetCurrentDrawable();
+}
+
+extern void GLHook_glXWaitGL(void)
+{
+    return ptr_glXWaitGL();
+}
+
+extern void GLHook_glXWaitX(void)
+{
+    return ptr_glXWaitX();
+}
+
+extern void GLHook_glXUseXFont(Font font, int first, int count, int list)
+{
+    return ptr_glXUseXFont(font, first, count, list);
+}
+#endif

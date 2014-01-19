@@ -18,10 +18,17 @@
 #ifndef EXPORTS_HPP_INCLUDED
 #define EXPORTS_HPP_INCLUDED
 
+#include <stdexcept>
+#include <cstring>
+#include "Platform.hpp"
+
+#if defined _WIN32 && defined _WIN64
 #include <GL/gl.h>
 #include <GL/glext.h>
-#include <stdexcept>
-#include "Platform.hpp"
+#else
+#include <GL/glx.h>
+#include <GL/glxext.h>
+#endif
 
 extern Library* OriginalGL;
 extern "C" bool __stdcall Initialize(void);
@@ -100,7 +107,7 @@ extern void (__stdcall *ptr_glDrawArrays) (GLenum mode, GLint first, GLsizei cou
 extern void (__stdcall *ptr_glDrawBuffer) (GLenum mode);
 extern void (__stdcall *ptr_glDrawElements) (GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
 extern void (__stdcall *ptr_glDrawPixels) (GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
-extern void (__stdcall *ptr_glDebugEntry) (DWORD dwArg1, DWORD dwArg2);
+//extern void (__stdcall *ptr_glDebugEntry) (DWORD dwArg1, DWORD dwArg2);
 extern void (__stdcall *ptr_glEdgeFlag) (GLboolean flag);
 extern void (__stdcall *ptr_glEdgeFlagv) (const GLboolean *flag);
 extern void (__stdcall *ptr_glEdgeFlagPointer) (GLsizei stride, const GLvoid *pointer);
@@ -397,6 +404,25 @@ extern BOOL (__stdcall *ptr_wglUseFontBitmapsW) (HDC hdc, DWORD first, DWORD cou
 extern BOOL (__stdcall *ptr_wglUseFontBitmapsA) (HDC hdc, DWORD first, DWORD count, DWORD listBase);
 extern BOOL (__stdcall *ptr_wglUseFontOutlinesW) (HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf);
 extern BOOL (__stdcall *ptr_wglUseFontOutlinesA) (HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf);
+
+#else
+extern XVisualInfo* (*ptr_glXChooseVisual) (Display* dpy, int screen, int* attribList);
+extern GLXContext (*ptr_glXCreateContext) (Display* dpy, XVisualInfo* vis, GLXContext shareList, Bool direct);
+extern void (*ptr_glXDestroyContext) (Display* dpy, GLXContext ctx);
+extern Bool (*ptr_glXMakeCurrent) (Display* dpy, GLXDrawable drawable, GLXContext ctx);
+extern void (*ptr_glXCopyContext) (Display* dpy, GLXContext src, GLXContext dst, unsigned long mask);
+extern void (*ptr_glXSwapBuffers) (Display* dpy, GLXDrawable drawable);
+extern GLXPixmap (*ptr_glXCreateGLXPixmap) (Display* dpy, XVisualInfo* visual, Pixmap pixmap);
+extern void (*ptr_glXDestroyGLXPixmap) (Display* dpy, GLXPixmap pixmap);
+extern Bool (*ptr_glXQueryExtension) (Display* dpy, int* errorb, int* event);
+extern Bool (*ptr_glXQueryVersion) (Display* dpy, int* maj, int* min);
+extern Bool (*ptr_glXIsDirect) (Display* dpy, GLXContext ctx);
+extern int (*ptr_glXGetConfig) (Display* dpy, XVisualInfo* visual, int attrib, int* value);
+extern GLXContext (*ptr_glXGetCurrentContext) (void);
+extern GLXDrawable (*ptr_glXGetCurrentDrawable) (void);
+extern void (*ptr_glXWaitGL) (void);
+extern void (*ptr_glXWaitX) (void);
+extern void (*ptr_glXUseXFont) (Font font, int first, int count, int list);
 #endif
 
 #endif // EXPORTS_HPP_INCLUDED

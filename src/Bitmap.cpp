@@ -15,7 +15,7 @@
   *  along with GLX.  If not, see <http://www.gnu.org/licenses/>.
   */
 
-#include "Bitmap.h"
+#include "Bitmap.hpp"
 
 Bitmap::Bitmap(const char* FilePath) : Pixels(0), width(0), height(0), BitsPerPixel(0)
 {
@@ -55,7 +55,7 @@ Bitmap::Bitmap(const char* FilePath) : Pixels(0), width(0), height(0), BitsPerPi
 Bitmap::Bitmap(const void* Ptr, int Width, int Height, int Bpp) : Pixels(0), width(Width), height(Height), BitsPerPixel(Bpp)
 {
     Pixels.resize(((width * BitsPerPixel + 31) / 32) * 4 * height);
-    memcpy(Pixels.data(), Ptr, Pixels.size());
+    std::memcpy(Pixels.data(), Ptr, Pixels.size());
 }
 
 void Bitmap::Save(const char* FilePath)

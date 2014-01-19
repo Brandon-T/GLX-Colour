@@ -161,6 +161,7 @@ void BltMappedBuffer(void* buffer, int width, int height)
     glDeleteTextures(1, &Texture);
 }
 
+#if defined _WIN32 || defined _WIN64
 BOOL GLHook_wglSwapBuffers(HDC hdc)
 {
     GLint ViewPort[4] = {0};
@@ -219,3 +220,4 @@ BOOL GLHook_wglSwapBuffers(HDC hdc)
 
 	return ptr_wglSwapBuffers(hdc);
 }
+#endif

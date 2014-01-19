@@ -45,6 +45,8 @@ GLuint LoadTexture(void* Buffer, int width, int height, GLenum Target);
 
 void DrawTexture(std::uint32_t Target, std::uint32_t ID, float X1, float Y1, float X2, float Y2, int Width, int Height);
 
+#if defined _WIN32 || defined _WIN64
 extern "C" __stdcall BOOL GLHook_wglSwapBuffers(HDC hdc);
+#endif
 
 #endif // HOOKS_HPP_INCLUDED

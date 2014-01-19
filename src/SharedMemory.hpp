@@ -28,20 +28,21 @@
     #include <unistd.h>
 #endif
 
-#include <tchar.h>
 #include <iostream>
-#include <map>
 
 class SharedMemory
 {
     private:
         void* FromFile;
+        #if defined _WIN32 || defined _WIN64
         void* hFileMap;
+        #else
+        int hFileMap;
+        #endif
         void* pData;
         std::string MapName;
         std::size_t Size;
         bool Debug;
-        std::map<std::string, void*> Events;
 
     public:
         SharedMemory(std::string MapName);
@@ -52,7 +53,7 @@ class SharedMemory
         SharedMemory(SharedMemory && Shm) = delete;
         SharedMemory& operator = (const SharedMemory& Shm) = delete;
         SharedMemory& operator = (SharedMemory && Shm) = delete;
-		
+
         void* GetDataPointer();
 
         bool OpenMemoryMap(std::size_t Size);
@@ -60,16 +61,6 @@ class SharedMemory
         bool MapMemory(std::size_t Size);
 
         bool ReleaseMemory();
-
-        bool CreateNewEvent(LPSECURITY_ATTRIBUTES lpEventAttributes, bool bManualReset, bool bInitialState, std::string EventName);
-
-        std::uint32_t OpenSingleEvent(std::string EventName, bool InheritHandle, bool SaveHandle = false, std::uint32_t dwDesiredAccess = EVENT_ALL_ACCESS, std::uint32_t dwMilliseconds = INFINITE);
-
-        bool SetEventSignal(std::string EventName, bool Signaled);
-
-        bool DeleteSingleEvent(std::string EventName);
-
-        bool DeleteAllEvents();
 
         void SetDebug(bool On);
 };

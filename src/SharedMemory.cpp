@@ -17,12 +17,11 @@
 
 #include "SharedMemory.hpp"
 
-SharedMemory::SharedMemory(std::string MapName) : hFileMap(nullptr), pData(nullptr), MapName(MapName), Size(0), Debug(false), Events() {}
-SharedMemory::SharedMemory(std::string MapName, std::size_t Size) : hFileMap(nullptr), pData(nullptr), MapName(MapName), Size(Size), Debug(false), Events() {}
+SharedMemory::SharedMemory(std::string MapName) : hFileMap(0), pData(nullptr), MapName(MapName), Size(0), Debug(false) {}
+SharedMemory::SharedMemory(std::string MapName, std::size_t Size) : hFileMap(0), pData(nullptr), MapName(MapName), Size(Size), Debug(false) {}
 SharedMemory::~SharedMemory()
 {
     ReleaseMemory();
-    DeleteAllEvents();
 }
 
 void* SharedMemory::GetDataPointer()
@@ -53,19 +52,19 @@ bool SharedMemory::OpenMemoryMap(std::size_t Size)
 
     if ((hFileMap = open(MapName.c_str(), O_RDWR | O_CREAT, 438)) == -1)
     {
-        if (Debug) std::cout << _T("\nCould Not Open Shared Memory Map.\n");
+        if (Debug) std::cout << "\nCould Not Open Shared Memory Map.\n";
         return false;
     }
 
     if ((pData = mmap(nullptr, Size, PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, hFileMap, 0)) == MAP_FAILED)
     {
-        if (Debug) std::cout << _T("\nCould Not Map View Of File.\n");
+        if (Debug) std::cout << "\nCould Not Map View Of File.\n";
         close(hFileMap);
         return false;
     }
     #endif
 
-    if (Debug) std::cout << _T("\nInter-Process Communication Successful.\n");
+    if (Debug) std::cout << "\nInter-Process Communication Successful.\n";
     return true;
 }
 
@@ -91,19 +90,19 @@ bool SharedMemory::MapMemory(std::size_t Size)
 
     if ((hFileMap = open(MapName.c_str(), O_RDWR | O_CREAT, 438)) == -1)
     {
-        if (Debug) std::cout << _T("\nCould Not Create Shared Memory Map.\n");
+        if (Debug) std::cout << "\nCould Not Create Shared Memory Map.\n";
         return false;
     }
 
     if ((pData = mmap(nullptr, Size, PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, hFileMap, 0)) == MAP_FAILED)
     {
-        if (Debug) std::cout << _T("\nCould Not Map View Of File.\n");
+        if (Debug) std::cout << "\nCould Not Map View Of File.\n";
         close(hFileMap);
         return false;
     }
     #endif
 
-    if (Debug) std::cout << _T("\nMapped Shared Memory Successfully.\n");
+    if (Debug) std::cout << "\nMapped Shared Memory Successfully.\n";
     return true;
 }
 
@@ -138,7 +137,7 @@ bool SharedMemory::ReleaseMemory()
         Result = munmap(pData, Size);
         if (!Result && Debug)
         {
-            std::cout << _T("\nMemory Un-Mapped Successfully.\n");
+            std::cout << "\nMemory Un-Mapped Successfully.\n";
         }
         pData = nullptr;
         return true;
@@ -148,87 +147,11 @@ bool SharedMemory::ReleaseMemory()
     {
         if (!close(hFileMap))
         {
-            hFileMap = nullptr;
-            if (Debug) std::cout << _T("\nMemory Map Closed Successfully.\n");
+            hFileMap = 0;
+            if (Debug) std::cout << "\nMemory Map Closed Successfully.\n";
         }
     }
     #endif
-    return Result;
-}
-
-bool SharedMemory::CreateNewEvent(LPSECURITY_ATTRIBUTES lpEventAttributes, bool bManualReset, bool bInitialState, std::string EventName)
-{
-    std::map<std::string, void*>::iterator it = Events.find(EventName);
-    if (it != Events.end())
-    {
-        if (Debug)
-        {
-            std::cout << _T("\nCreateNewEvent Error: An Event With That Key Already Exists!\n");
-        }
-        return false;
-    }
-
-    Events.insert(std::pair<std::string, void*>(EventName, CreateEvent(lpEventAttributes, bManualReset, bInitialState, EventName.c_str())));
-    it = Events.end();
-    return ((--it)->second != nullptr);
-}
-
-std::uint32_t SharedMemory::OpenSingleEvent(std::string EventName, bool InheritHandle, bool SaveHandle, std::uint32_t dwDesiredAccess, std::uint32_t dwMilliseconds)
-{
-    void* hEvent = OpenEvent(dwDesiredAccess, InheritHandle, EventName.c_str());
-    if (hEvent)
-    {
-        if (SaveHandle)
-        {
-            std::map<std::string, void*>::iterator it = Events.find(EventName);
-            if (it != Events.end())
-            {
-                CloseHandle(it->second);
-                it->second = hEvent;
-            }
-            else
-                Events.insert(std::pair<std::string, void*>(EventName, hEvent));
-        }
-        std::uint32_t Result = WaitForSingleObject(hEvent, dwMilliseconds);
-        if (!SaveHandle) CloseHandle(hEvent);
-        return Result;
-    }
-    CloseHandle(hEvent);
-    return WAIT_FAILED;
-}
-
-bool SharedMemory::SetEventSignal(std::string EventName, bool Signaled)
-{
-    std::map<std::string, void*>::iterator it = Events.find(EventName);
-    if (it == Events.end())
-    {
-        if (Debug)
-        {
-            std::cout << _T("\nSetEventSignal Error: No Event With That Key Exists!\n");
-        }
-        return false;
-    }
-    if (Signaled) return SetEvent(it->second);
-    return ResetEvent(it->second);
-}
-
-bool SharedMemory::DeleteSingleEvent(std::string EventName)
-{
-    std::map<std::string, void*>::iterator it = Events.find(EventName);
-    if (it == Events.end()) return true;
-    bool Result = CloseHandle(it->second);
-    Events.erase(it);
-    return Result;
-}
-
-bool SharedMemory::DeleteAllEvents()
-{
-    bool Result = false;
-    for (std::map<std::string, void*>::iterator it = Events.begin(); it != Events.end(); ++it)
-    {
-        Result = Result && CloseHandle(it->second);
-    }
-    Events.clear();
     return Result;
 }
 

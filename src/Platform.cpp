@@ -17,12 +17,12 @@
 
 #include "Platform.hpp"
 
-Library::Library(std::string Library)
+Library::Library(std::string library)
 {
     #if defined _WIN32 || defined _WIN64
     this->Module = LoadLibrary(Library.c_str());
     #else
-    this->Module = dlopen(Library.c_str(), RTLD_LAZY);
+    this->Module = dlopen(library.c_str(), RTLD_LAZY);
     #endif
 }
 

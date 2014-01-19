@@ -17,6 +17,7 @@
 
 #include "Hooks.hpp"
 
+#if defined _WIN32 || defined _WIN64
 extern "C" __declspec(dllexport) bool __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
     switch(fdwReason)
@@ -36,3 +37,17 @@ extern "C" __declspec(dllexport) bool __stdcall DllMain(HINSTANCE hinstDLL, DWOR
     }
     return true;
 }
+#else
+void construct() __attribute__((constructor));
+void destruct() __attribute__((destructor));
+
+void construct()
+{
+    Initialize();
+}
+
+void destruct()
+{
+    DeInitialize();
+}
+#endif

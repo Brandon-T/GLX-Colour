@@ -15,10 +15,10 @@
   *  along with GLX.  If not, see <http://www.gnu.org/licenses/>.
   */
 
-#include "SmartPlugin.hpp"
+#include "SMARTPlugin.hpp"
 #include "Hooks.hpp"
 #include <iostream>
-#include "Bitmap.h"
+#include "Bitmap.hpp"
 
 unsigned int Texture = 0;
 SMARTInfo* SmartGlobal = nullptr;
