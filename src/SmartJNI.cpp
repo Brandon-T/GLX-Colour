@@ -83,10 +83,10 @@ void BltSmartBuffer()
             std::vector<std::uint8_t> Pixels(SmartGlobal->width * SmartGlobal->height * 4);
             void* P = Pixels.data();
             FlipImageBytes(SmartGlobal->dbg, P, SmartGlobal->width, SmartGlobal->height);
-            glEnable(GL_TEXTURE_RECTANGLE);
-            glBindTexture(GL_TEXTURE_RECTANGLE, Texture);
-            glTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, SmartGlobal->width, SmartGlobal->height, GL_BGRA, GL_UNSIGNED_BYTE, Pixels.data());
-            glDisable(GL_TEXTURE_RECTANGLE);
+            ptr_glEnable(GL_TEXTURE_RECTANGLE);
+            ptr_glBindTexture(GL_TEXTURE_RECTANGLE, Texture);
+            ptr_glTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, SmartGlobal->width, SmartGlobal->height, GL_BGRA, GL_UNSIGNED_BYTE, Pixels.data());
+            ptr_glDisable(GL_TEXTURE_RECTANGLE);
         }
 
         std::uint8_t* Ptr = (std::uint8_t*)SmartGlobal->dbg;

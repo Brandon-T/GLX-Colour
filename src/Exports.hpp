@@ -22,7 +22,7 @@
 #include <cstring>
 #include "Platform.hpp"
 
-#if defined _WIN32 && defined _WIN64
+#if defined _WIN32 || defined _WIN64
 #include <GL/gl.h>
 #include <GL/glext.h>
 #else
@@ -140,9 +140,9 @@ extern void (__stdcall *ptr_glGenBuffersARB) (GLsizei n, GLuint *buffers);
 extern GLuint (__stdcall *ptr_glGenLists) (GLsizei range);
 extern void (__stdcall *ptr_glGenTextures) (GLsizei n, GLuint *textures);
 extern void (__stdcall *ptr_glGetBooleanv) (GLenum pname, GLboolean *params);
-extern void (__stdcall *ptr_glGetDoublev) (GLenum pname, GLboolean *params);
-extern void (__stdcall *ptr_glGetFloatv) (GLenum pname, GLboolean *params);
-extern void (__stdcall *ptr_glGetIntegerv) (GLenum pname, GLboolean *params);
+extern void (__stdcall *ptr_glGetDoublev) (GLenum pname, GLdouble *params);
+extern void (__stdcall *ptr_glGetFloatv) (GLenum pname, GLfloat *params);
+extern void (__stdcall *ptr_glGetIntegerv) (GLenum pname, GLint *params);
 extern void (__stdcall *ptr_glGetClipPlane) (GLenum plane, GLdouble *equation);
 extern GLenum (__stdcall *ptr_glGetError) (void);
 extern void (__stdcall *ptr_glGetLightfv) (GLenum light, GLenum pname, GLfloat *params);
@@ -190,7 +190,7 @@ extern void (__stdcall *ptr_glLightf) (GLenum light, GLenum pname, GLfloat param
 extern void (__stdcall *ptr_glLightfv) (GLenum light, GLenum pname, const GLfloat *params);
 extern void (__stdcall *ptr_glLighti) (GLenum light, GLenum pname, GLint param);
 extern void (__stdcall *ptr_glLightiv) (GLenum light, GLenum pname, const GLint *params);
-extern void (__stdcall *ptr_glLightModelf) (GLenum pname, GLfloat *param);
+extern void (__stdcall *ptr_glLightModelf) (GLenum pname, GLfloat param);
 extern void (__stdcall *ptr_glLightModelfv) (GLenum pname, const GLfloat *params);
 extern void (__stdcall *ptr_glLightModeli) (GLenum pname, GLint param);
 extern void (__stdcall *ptr_glLightModeliv) (GLenum pname, const GLint *params);
@@ -217,7 +217,7 @@ extern void (__stdcall *ptr_glMaterialiv) (GLenum face, GLenum pname, const GLin
 extern void (__stdcall *ptr_glMatrixMode) (GLenum mode);
 extern void (__stdcall *ptr_glMultiTexCoord2fARB) (GLenum target, GLfloat s, GLfloat t);
 extern void (__stdcall *ptr_glMultMatrixd) (const GLdouble *m);
-extern void (__stdcall *ptr_glMultMatrixf) (const GLdouble *m);
+extern void (__stdcall *ptr_glMultMatrixf) (const GLfloat *m);
 extern void (__stdcall *ptr_glNewList) (GLuint list, GLenum mode);
 extern void (__stdcall *ptr_glNormal3b) (GLbyte nx, GLbyte ny, GLbyte nz);
 extern void (__stdcall *ptr_glNormal3bv) (const GLbyte *v);
@@ -341,8 +341,8 @@ extern void (__stdcall *ptr_glTexGenf) (GLenum coord, GLenum pname, GLfloat para
 extern void (__stdcall *ptr_glTexGenfv) (GLenum coord, GLenum pname, const GLfloat *params);
 extern void (__stdcall *ptr_glTexGeni) (GLenum coord, GLenum pname, GLint param);
 extern void (__stdcall *ptr_glTexGeniv) (GLenum coord, GLenum pname, const GLint *params);
-extern void (__stdcall *ptr_glTexImage1D) (GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLint format, GLenum type, const GLvoid *pixels);
-extern void (__stdcall *ptr_glTexImage2D) (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLint format, GLenum type, const GLvoid *pixels);
+extern void (__stdcall *ptr_glTexImage1D) (GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
+extern void (__stdcall *ptr_glTexImage2D) (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
 extern void (__stdcall *ptr_glTexParameterf) (GLenum target, GLenum pname, GLfloat param);
 extern void (__stdcall *ptr_glTexParameterfv) (GLenum target, GLenum pname, const GLfloat *params);
 extern void (__stdcall *ptr_glTexParameteri) (GLenum target, GLenum pname, GLint param);
@@ -399,13 +399,14 @@ extern BOOL (__stdcall *ptr_wglSetPixelFormat) (HDC hdc, int iPixelFormat, const
 extern BOOL (__stdcall *ptr_wglShareLists) (HGLRC hglrc1, HGLRC hglrc2);
 extern BOOL (__stdcall *ptr_wglSwapBuffers) (HDC hdc);
 extern BOOL (__stdcall *ptr_wglSwapLayerBuffers) (HDC hdc, UINT fuPlanes);
-extern void (__stdcall *ptr_wglSwapMultipleBuffers) (DWORD dwArg1, DWORD dwArg2);
+extern DWORD (__stdcall *ptr_wglSwapMultipleBuffers) (UINT dwArg1, CONST WGLSWAP* dwArg2);
 extern BOOL (__stdcall *ptr_wglUseFontBitmapsW) (HDC hdc, DWORD first, DWORD count, DWORD listBase);
 extern BOOL (__stdcall *ptr_wglUseFontBitmapsA) (HDC hdc, DWORD first, DWORD count, DWORD listBase);
 extern BOOL (__stdcall *ptr_wglUseFontOutlinesW) (HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf);
 extern BOOL (__stdcall *ptr_wglUseFontOutlinesA) (HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf);
 
 #else
+
 extern XVisualInfo* (*ptr_glXChooseVisual) (Display* dpy, int screen, int* attribList);
 extern GLXContext (*ptr_glXCreateContext) (Display* dpy, XVisualInfo* vis, GLXContext shareList, Bool direct);
 extern void (*ptr_glXDestroyContext) (Display* dpy, GLXContext ctx);

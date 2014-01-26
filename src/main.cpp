@@ -18,7 +18,7 @@
 #include "Hooks.hpp"
 
 #if defined _WIN32 || defined _WIN64
-extern "C" __declspec(dllexport) bool __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+extern "C" bool __stdcall DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
     switch(fdwReason)
     {

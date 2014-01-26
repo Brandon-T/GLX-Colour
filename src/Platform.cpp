@@ -20,7 +20,7 @@
 Library::Library(std::string library)
 {
     #if defined _WIN32 || defined _WIN64
-    this->Module = LoadLibrary(Library.c_str());
+    this->Module = LoadLibrary(library.c_str());
     #else
     this->Module = dlopen(library.c_str(), RTLD_LAZY);
     #endif

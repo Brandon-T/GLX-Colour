@@ -125,9 +125,9 @@ void (__stdcall *ptr_glGenBuffersARB) (GLsizei n, GLuint *buffers);
 GLuint (__stdcall *ptr_glGenLists) (GLsizei range);
 void (__stdcall *ptr_glGenTextures) (GLsizei n, GLuint *textures);
 void (__stdcall *ptr_glGetBooleanv) (GLenum pname, GLboolean *params);
-void (__stdcall *ptr_glGetDoublev) (GLenum pname, GLboolean *params);
-void (__stdcall *ptr_glGetFloatv) (GLenum pname, GLboolean *params);
-void (__stdcall *ptr_glGetIntegerv) (GLenum pname, GLboolean *params);
+void (__stdcall *ptr_glGetDoublev) (GLenum pname, GLdouble *params);
+void (__stdcall *ptr_glGetFloatv) (GLenum pname, GLfloat *params);
+void (__stdcall *ptr_glGetIntegerv) (GLenum pname, GLint *params);
 void (__stdcall *ptr_glGetClipPlane) (GLenum plane, GLdouble *equation);
 GLenum (__stdcall *ptr_glGetError) (void);
 void (__stdcall *ptr_glGetLightfv) (GLenum light, GLenum pname, GLfloat *params);
@@ -175,7 +175,7 @@ void (__stdcall *ptr_glLightf) (GLenum light, GLenum pname, GLfloat param);
 void (__stdcall *ptr_glLightfv) (GLenum light, GLenum pname, const GLfloat *params);
 void (__stdcall *ptr_glLighti) (GLenum light, GLenum pname, GLint param);
 void (__stdcall *ptr_glLightiv) (GLenum light, GLenum pname, const GLint *params);
-void (__stdcall *ptr_glLightModelf) (GLenum pname, GLfloat *param);
+void (__stdcall *ptr_glLightModelf) (GLenum pname, GLfloat param);
 void (__stdcall *ptr_glLightModelfv) (GLenum pname, const GLfloat *params);
 void (__stdcall *ptr_glLightModeli) (GLenum pname, GLint param);
 void (__stdcall *ptr_glLightModeliv) (GLenum pname, const GLint *params);
@@ -202,7 +202,7 @@ void (__stdcall *ptr_glMaterialiv) (GLenum face, GLenum pname, const GLint *para
 void (__stdcall *ptr_glMatrixMode) (GLenum mode);
 void (__stdcall *ptr_glMultiTexCoord2fARB) (GLenum target, GLfloat s, GLfloat t);
 void (__stdcall *ptr_glMultMatrixd) (const GLdouble *m);
-void (__stdcall *ptr_glMultMatrixf) (const GLdouble *m);
+void (__stdcall *ptr_glMultMatrixf) (const GLfloat *m);
 void (__stdcall *ptr_glNewList) (GLuint list, GLenum mode);
 void (__stdcall *ptr_glNormal3b) (GLbyte nx, GLbyte ny, GLbyte nz);
 void (__stdcall *ptr_glNormal3bv) (const GLbyte *v);
@@ -326,8 +326,8 @@ void (__stdcall *ptr_glTexGenf) (GLenum coord, GLenum pname, GLfloat param);
 void (__stdcall *ptr_glTexGenfv) (GLenum coord, GLenum pname, const GLfloat *params);
 void (__stdcall *ptr_glTexGeni) (GLenum coord, GLenum pname, GLint param);
 void (__stdcall *ptr_glTexGeniv) (GLenum coord, GLenum pname, const GLint *params);
-void (__stdcall *ptr_glTexImage1D) (GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLint format, GLenum type, const GLvoid *pixels);
-void (__stdcall *ptr_glTexImage2D) (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLint format, GLenum type, const GLvoid *pixels);
+void (__stdcall *ptr_glTexImage1D) (GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
+void (__stdcall *ptr_glTexImage2D) (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
 void (__stdcall *ptr_glTexParameterf) (GLenum target, GLenum pname, GLfloat param);
 void (__stdcall *ptr_glTexParameterfv) (GLenum target, GLenum pname, const GLfloat *params);
 void (__stdcall *ptr_glTexParameteri) (GLenum target, GLenum pname, GLint param);
@@ -384,7 +384,7 @@ BOOL (__stdcall *ptr_wglSetPixelFormat) (HDC hdc, int iPixelFormat, const PIXELF
 BOOL (__stdcall *ptr_wglShareLists) (HGLRC hglrc1, HGLRC hglrc2);
 BOOL (__stdcall *ptr_wglSwapBuffers) (HDC hdc);
 BOOL (__stdcall *ptr_wglSwapLayerBuffers) (HDC hdc, UINT fuPlanes);
-void (__stdcall *ptr_wglSwapMultipleBuffers) (DWORD dwArg1, DWORD dwArg2);
+DWORD (__stdcall *ptr_wglSwapMultipleBuffers) (UINT dwArg1, CONST WGLSWAP* dwArg2);
 BOOL (__stdcall *ptr_wglUseFontBitmapsW) (HDC hdc, DWORD first, DWORD count, DWORD listBase);
 BOOL (__stdcall *ptr_wglUseFontBitmapsA) (HDC hdc, DWORD first, DWORD count, DWORD listBase);
 BOOL (__stdcall *ptr_wglUseFontOutlinesW) (HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf);
@@ -834,1925 +834,1925 @@ bool __stdcall DeInitialize(void)
 	return false;
 }
 
-extern "C" __stdcall void GLHook_glAccum(GLenum op, GLfloat value)
+extern "C" __stdcall void glAccum(GLenum op, GLfloat value)
 {
 	ptr_glAccum(op, value);
 }
 
-extern "C" __stdcall void GLHook_glActiveTextureARB(GLenum texture)
+extern "C" __stdcall void glActiveTextureARB(GLenum texture)
 {
 	ptr_glActiveTextureARB(texture);
 }
 
-extern "C" __stdcall void GLHook_glAlphaFunc(GLenum func, GLclampf ref)
+extern "C" __stdcall void glAlphaFunc(GLenum func, GLclampf ref)
 {
 	ptr_glAlphaFunc(func, ref);
 }
 
-extern "C" __stdcall GLboolean GLHook_glAreTexturesResident(GLsizei n, const GLuint *textures, GLboolean *residences)
+extern "C" __stdcall GLboolean glAreTexturesResident(GLsizei n, const GLuint *textures, GLboolean *residences)
 {
 	return ptr_glAreTexturesResident(n, textures, residences);
 }
 
-extern "C" __stdcall void GLHook_glArrayElement(GLint index)
+extern "C" __stdcall void glArrayElement(GLint index)
 {
 	ptr_glArrayElement(index);
 }
 
-extern "C" __stdcall void GLHook_glBegin(GLenum mode)
+extern "C" __stdcall void glBegin(GLenum mode)
 {
 	ptr_glBegin(mode);
 }
 
-extern "C" __stdcall void GLHook_glBindBufferARB(GLenum target, GLuint buffer)
+extern "C" __stdcall void glBindBufferARB(GLenum target, GLuint buffer)
 {
 	ptr_glBindBufferARB(target, buffer);
 }
 
-extern "C" __stdcall void GLHook_glBindTexture(GLenum target, GLuint texture)
+extern "C" __stdcall void glBindTexture(GLenum target, GLuint texture)
 {
 	ptr_glBindTexture(target, texture);
 }
 
-extern "C" __stdcall void GLHook_glBitmap(GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove, GLfloat ymove, const GLubyte *bitmap)
+extern "C" __stdcall void glBitmap(GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove, GLfloat ymove, const GLubyte *bitmap)
 {
 	ptr_glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap);
 }
 
-extern "C" __stdcall void GLHook_glBlendFunc(GLenum sfactor, GLenum dfactor)
+extern "C" __stdcall void glBlendFunc(GLenum sfactor, GLenum dfactor)
 {
 	ptr_glBlendFunc(sfactor, dfactor);
 }
 
-extern "C" __stdcall void GLHook_glBufferDataARB(GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage)
+extern "C" __stdcall void glBufferDataARB(GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage)
 {
 	ptr_glBufferDataARB(target,  size, data, usage);
 }
 
-extern "C" __stdcall void GLHook_glBufferSubDataARB(GLenum target, GLintptrARB offset, GLsizeiptrARB size, const GLvoid *data)
+extern "C" __stdcall void glBufferSubDataARB(GLenum target, GLintptrARB offset, GLsizeiptrARB size, const GLvoid *data)
 {
 	ptr_glBufferSubDataARB(target,  offset,  size, data);
 }
 
-extern "C" __stdcall void GLHook_glCallList(GLuint list)
+extern "C" __stdcall void glCallList(GLuint list)
 {
 	ptr_glCallList(list);
 }
 
-extern "C" __stdcall void GLHook_glCallLists(GLsizei n, GLenum type, const GLvoid *lists)
+extern "C" __stdcall void glCallLists(GLsizei n, GLenum type, const GLvoid *lists)
 {
 	ptr_glCallLists(n, type, lists);
 }
 
-extern "C" __stdcall void GLHook_glClear(GLbitfield mask)
+extern "C" __stdcall void glClear(GLbitfield mask)
 {
 	ptr_glClear(mask);
 }
 
-extern "C" __stdcall void GLHook_glClearAccum(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
+extern "C" __stdcall void glClearAccum(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
 	ptr_glClearAccum(red, green, blue, alpha);
 }
 
-extern "C" __stdcall void GLHook_glClearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha)
+extern "C" __stdcall void glClearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha)
 {
 	ptr_glClearColor(red, green, blue, alpha);
 }
 
-extern "C" __stdcall void GLHook_glClearDepth(GLclampd depth)
+extern "C" __stdcall void glClearDepth(GLclampd depth)
 {
 	ptr_glClearDepth(depth);
 }
 
-extern "C" __stdcall void GLHook_glClearIndex(GLfloat c)
+extern "C" __stdcall void glClearIndex(GLfloat c)
 {
 	ptr_glClearIndex(c);
 }
 
-extern "C" __stdcall void GLHook_glClearStencil(GLint s)
+extern "C" __stdcall void glClearStencil(GLint s)
 {
 	ptr_glClearStencil(s);
 }
 
-extern "C" __stdcall void GLHook_glClipPlane(GLenum plane, const GLdouble *equation)
+extern "C" __stdcall void glClipPlane(GLenum plane, const GLdouble *equation)
 {
 	ptr_glClipPlane(plane, equation);
 }
 
-extern "C" __stdcall void GLHook_glColor3b(GLbyte red, GLbyte green, GLbyte blue)
+extern "C" __stdcall void glColor3b(GLbyte red, GLbyte green, GLbyte blue)
 {
 	ptr_glColor3b( red,  green,  blue);
 }
 
-extern "C" __stdcall void GLHook_glColor3bv(const GLbyte *v)
+extern "C" __stdcall void glColor3bv(const GLbyte *v)
 {
 	ptr_glColor3bv( v);
 }
 
-extern "C" __stdcall void GLHook_glColor3d(GLdouble red, GLdouble green, GLdouble blue)
+extern "C" __stdcall void glColor3d(GLdouble red, GLdouble green, GLdouble blue)
 {
 	ptr_glColor3d(red, green, blue);
 }
 
-extern "C" __stdcall void GLHook_glColor3dv(const GLdouble *v)
+extern "C" __stdcall void glColor3dv(const GLdouble *v)
 {
 	ptr_glColor3dv(v);
 }
 
-extern "C" __stdcall void GLHook_glColor3f(GLfloat red, GLfloat green, GLfloat blue)
+extern "C" __stdcall void glColor3f(GLfloat red, GLfloat green, GLfloat blue)
 {
 	ptr_glColor3f(red, green, blue);
 }
 
-extern "C" __stdcall void GLHook_glColor3fv(const GLfloat *v)
+extern "C" __stdcall void glColor3fv(const GLfloat *v)
 {
 	ptr_glColor3fv(v);
 }
 
-extern "C" __stdcall void GLHook_glColor3i(GLint red, GLint green, GLint blue)
+extern "C" __stdcall void glColor3i(GLint red, GLint green, GLint blue)
 {
 	ptr_glColor3i(red, green, blue);
 }
 
-extern "C" __stdcall void GLHook_glColor3iv(const GLint *v)
+extern "C" __stdcall void glColor3iv(const GLint *v)
 {
 	ptr_glColor3iv(v);
 }
 
-extern "C" __stdcall void GLHook_glColor3s(GLshort red, GLshort green, GLshort blue)
+extern "C" __stdcall void glColor3s(GLshort red, GLshort green, GLshort blue)
 {
 	ptr_glColor3s(red, green, blue);
 }
 
-extern "C" __stdcall void GLHook_glColor3sv(const GLshort *v)
+extern "C" __stdcall void glColor3sv(const GLshort *v)
 {
 	ptr_glColor3sv(v);
 }
 
-extern "C" __stdcall void GLHook_glColor3ub(GLubyte red, GLubyte green, GLubyte blue)
+extern "C" __stdcall void glColor3ub(GLubyte red, GLubyte green, GLubyte blue)
 {
 	ptr_glColor3ub(red, green, blue);
 }
 
-extern "C" __stdcall void GLHook_glColor3ubv(const GLubyte *v)
+extern "C" __stdcall void glColor3ubv(const GLubyte *v)
 {
 	ptr_glColor3ubv(v);
 }
 
-extern "C" __stdcall void GLHook_glColor3ui(GLuint red, GLuint green, GLuint blue)
+extern "C" __stdcall void glColor3ui(GLuint red, GLuint green, GLuint blue)
 {
 	ptr_glColor3ui(red, green, blue);
 }
 
-extern "C" __stdcall void GLHook_glColor3uiv(const GLuint *v)
+extern "C" __stdcall void glColor3uiv(const GLuint *v)
 {
 	ptr_glColor3uiv(v);
 }
 
-extern "C" __stdcall void GLHook_glColor3us(GLushort red, GLushort green, GLushort blue)
+extern "C" __stdcall void glColor3us(GLushort red, GLushort green, GLushort blue)
 {
 	ptr_glColor3us(red, green, blue);
 }
 
-extern "C" __stdcall void GLHook_glColor3usv(const GLushort *v)
+extern "C" __stdcall void glColor3usv(const GLushort *v)
 {
 	ptr_glColor3usv(v);
 }
 
-extern "C" __stdcall void GLHook_glColor4b(GLbyte red, GLbyte green, GLbyte blue, GLbyte alpha)
+extern "C" __stdcall void glColor4b(GLbyte red, GLbyte green, GLbyte blue, GLbyte alpha)
 {
 	ptr_glColor4b( red,  green,  blue,  alpha);
 }
 
-extern "C" __stdcall void GLHook_glColor4bv(const GLbyte *v)
+extern "C" __stdcall void glColor4bv(const GLbyte *v)
 {
 	ptr_glColor4bv( v);
 }
 
-extern "C" __stdcall void GLHook_glColor4d(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha)
+extern "C" __stdcall void glColor4d(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha)
 {
 	ptr_glColor4d(red, green, blue, alpha);
 }
 
-extern "C" __stdcall void GLHook_glColor4dv(const GLdouble *v)
+extern "C" __stdcall void glColor4dv(const GLdouble *v)
 {
 	ptr_glColor4dv(v);
 }
 
-extern "C" __stdcall void GLHook_glColor4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
+extern "C" __stdcall void glColor4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
 	ptr_glColor4f(red, green, blue, alpha);
 }
 
-extern "C" __stdcall void GLHook_glColor4fv(const GLfloat *v)
+extern "C" __stdcall void glColor4fv(const GLfloat *v)
 {
 	ptr_glColor4fv(v);
 }
 
-extern "C" __stdcall void GLHook_glColor4i(GLint red, GLint green, GLint blue, GLint alpha)
+extern "C" __stdcall void glColor4i(GLint red, GLint green, GLint blue, GLint alpha)
 {
 	ptr_glColor4i(red, green, blue, alpha);
 }
 
-extern "C" __stdcall void GLHook_glColor4iv(const GLint *v)
+extern "C" __stdcall void glColor4iv(const GLint *v)
 {
 	ptr_glColor4iv(v);
 }
 
-extern "C" __stdcall void GLHook_glColor4s(GLshort red, GLshort green, GLshort blue, GLshort alpha)
+extern "C" __stdcall void glColor4s(GLshort red, GLshort green, GLshort blue, GLshort alpha)
 {
 	ptr_glColor4s(red, green, blue, alpha);
 }
 
-extern "C" __stdcall void GLHook_glColor4sv(const GLshort *v)
+extern "C" __stdcall void glColor4sv(const GLshort *v)
 {
 	ptr_glColor4sv(v);
 }
 
-extern "C" __stdcall void GLHook_glColor4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
+extern "C" __stdcall void glColor4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
 {
 	ptr_glColor4ub(red, green, blue, alpha);
 }
 
-extern "C" __stdcall void GLHook_glColor4ubv(const GLubyte *v)
+extern "C" __stdcall void glColor4ubv(const GLubyte *v)
 {
 	ptr_glColor4ubv(v);
 }
 
-extern "C" __stdcall void GLHook_glColor4ui(GLuint red, GLuint green, GLuint blue, GLuint alpha)
+extern "C" __stdcall void glColor4ui(GLuint red, GLuint green, GLuint blue, GLuint alpha)
 {
 	ptr_glColor4ui(red, green, blue, alpha);
 }
 
-extern "C" __stdcall void GLHook_glColor4uiv(const GLuint *v)
+extern "C" __stdcall void glColor4uiv(const GLuint *v)
 {
 	ptr_glColor4uiv(v);
 }
 
-extern "C" __stdcall void GLHook_glColor4us(GLushort red, GLushort green, GLushort blue, GLushort alpha)
+extern "C" __stdcall void glColor4us(GLushort red, GLushort green, GLushort blue, GLushort alpha)
 {
 	ptr_glColor4us(red, green, blue, alpha);
 }
 
-extern "C" __stdcall void GLHook_glColor4usv(const GLushort *v)
+extern "C" __stdcall void glColor4usv(const GLushort *v)
 {
 	ptr_glColor4usv(v);
 }
 
-extern "C" __stdcall void GLHook_glColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha)
+extern "C" __stdcall void glColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha)
 {
 	ptr_glColorMask(red, green, blue, alpha);
 }
 
-extern "C" __stdcall void GLHook_glColorMaterial(GLenum face, GLenum mode)
+extern "C" __stdcall void glColorMaterial(GLenum face, GLenum mode)
 {
 	ptr_glColorMaterial(face, mode);
 }
 
-extern "C" __stdcall void GLHook_glColorPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer)
+extern "C" __stdcall void glColorPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer)
 {
 	ptr_glColorPointer(size, type, stride, pointer);
 }
 
-extern "C" __stdcall void GLHook_glCopyPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum type)
+extern "C" __stdcall void glCopyPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum type)
 {
 	ptr_glCopyPixels(x, y, width, height, type);
 }
 
-extern "C" __stdcall void GLHook_glCopyTexImage1D(GLenum target, GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLint border)
+extern "C" __stdcall void glCopyTexImage1D(GLenum target, GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLint border)
 {
 	ptr_glCopyTexImage1D(target, level, internalFormat, x, y, width, border);
 }
 
-extern "C" __stdcall void GLHook_glCopyTexImage2D(GLenum target, GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border)
+extern "C" __stdcall void glCopyTexImage2D(GLenum target, GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border)
 {
 	ptr_glCopyTexImage2D(target, level, internalFormat, x, y, width, height, border);
 }
 
-extern "C" __stdcall void GLHook_glCopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width)
+extern "C" __stdcall void glCopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width)
 {
 	ptr_glCopyTexSubImage1D(target, level, xoffset, x, y, width);
 }
 
-extern "C" __stdcall void GLHook_glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height)
+extern "C" __stdcall void glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height)
 {
 	ptr_glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
 }
 
-extern "C" __stdcall void GLHook_glCullFace(GLenum mode)
+extern "C" __stdcall void glCullFace(GLenum mode)
 {
 	ptr_glCullFace(mode);
 }
 
-extern "C" __stdcall void GLHook_glDeleteLists(GLuint list, GLsizei range)
+extern "C" __stdcall void glDeleteLists(GLuint list, GLsizei range)
 {
 	ptr_glDeleteLists(list, range);
 }
 
-extern "C" __stdcall void GLHook_glDeleteTextures(GLsizei n, const GLuint *textures)
+extern "C" __stdcall void glDeleteTextures(GLsizei n, const GLuint *textures)
 {
 	ptr_glDeleteTextures(n, textures);
 }
 
-extern "C" __stdcall void GLHook_glDepthFunc(GLenum func)
+extern "C" __stdcall void glDepthFunc(GLenum func)
 {
 	ptr_glDepthFunc(func);
 }
 
-extern "C" __stdcall void GLHook_glDepthMask(GLboolean flag)
+extern "C" __stdcall void glDepthMask(GLboolean flag)
 {
 	ptr_glDepthMask(flag);
 }
 
-extern "C" __stdcall void GLHook_glDepthRange(GLclampd zNear, GLclampd zFar)
+extern "C" __stdcall void glDepthRange(GLclampd zNear, GLclampd zFar)
 {
 	ptr_glDepthRange(zNear, zFar);
 }
 
-extern "C" __stdcall void GLHook_glDisable(GLenum cap)
+extern "C" __stdcall void glDisable(GLenum cap)
 {
 	ptr_glDisable(cap);
 }
 
-extern "C" __stdcall void GLHook_glDisableClientState(GLenum array)
+extern "C" __stdcall void glDisableClientState(GLenum array)
 {
 	ptr_glDisableClientState(array);
 }
 
-extern "C" __stdcall void GLHook_glDrawArrays(GLenum mode, GLint first, GLsizei count)
+extern "C" __stdcall void glDrawArrays(GLenum mode, GLint first, GLsizei count)
 {
 	ptr_glDrawArrays(mode, first, count);
 }
 
-extern "C" __stdcall void GLHook_glDrawBuffer(GLenum mode)
+extern "C" __stdcall void glDrawBuffer(GLenum mode)
 {
 	ptr_glDrawBuffer(mode);
 }
 
-extern "C" __stdcall void GLHook_glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices)
+extern "C" __stdcall void glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices)
 {
 	ptr_glDrawElements(mode, count, type, indices);
 }
 
-extern "C" __stdcall void GLHook_glDrawPixels(GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels)
+extern "C" __stdcall void glDrawPixels(GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels)
 {
 	ptr_glDrawPixels(width, height, format, type, pixels);
 }
 
-/*extern "C" __stdcall void GLHook_glDebugEntry(DWORD dwArg1, DWORD dwArg2)
+/*extern "C" __stdcall void glDebugEntry(DWORD dwArg1, DWORD dwArg2)
 {
 	ptr_glDebugEntry(dwArg1, dwArg2);
 }*/
 
-extern "C" __stdcall void GLHook_glEdgeFlag(GLboolean flag)
+extern "C" __stdcall void glEdgeFlag(GLboolean flag)
 {
 	ptr_glEdgeFlag(flag);
 }
 
-extern "C" __stdcall void GLHook_glEdgeFlagv(const GLboolean *flag)
+extern "C" __stdcall void glEdgeFlagv(const GLboolean *flag)
 {
 	ptr_glEdgeFlagv(flag);
 }
 
-extern "C" __stdcall void GLHook_glEdgeFlagPointer(GLsizei stride, const GLvoid *pointer)
+extern "C" __stdcall void glEdgeFlagPointer(GLsizei stride, const GLvoid *pointer)
 {
 	ptr_glEdgeFlagPointer(stride, pointer);
 }
 
-extern "C" __stdcall void GLHook_glEnable(GLenum cap)
+extern "C" __stdcall void glEnable(GLenum cap)
 {
 	ptr_glEnable(cap);
 }
 
-extern "C" __stdcall void GLHook_glEnableClientState(GLenum array)
+extern "C" __stdcall void glEnableClientState(GLenum array)
 {
 	ptr_glEnableClientState(array);
 }
 
-extern "C" __stdcall void GLHook_glEnd(void)
+extern "C" __stdcall void glEnd(void)
 {
 	ptr_glEnd();
 }
 
-extern "C" __stdcall void GLHook_glEndList(void)
+extern "C" __stdcall void glEndList(void)
 {
 	ptr_glEndList();
 }
 
-extern "C" __stdcall void GLHook_glEvalCoord1d(GLdouble u)
+extern "C" __stdcall void glEvalCoord1d(GLdouble u)
 {
 	ptr_glEvalCoord1d(u);
 }
 
-extern "C" __stdcall void GLHook_glEvalCoord1dv(const GLdouble *u)
+extern "C" __stdcall void glEvalCoord1dv(const GLdouble *u)
 {
 	ptr_glEvalCoord1dv(u);
 }
 
-extern "C" __stdcall void GLHook_glEvalCoord1f(GLfloat u)
+extern "C" __stdcall void glEvalCoord1f(GLfloat u)
 {
 	ptr_glEvalCoord1f(u);
 }
 
-extern "C" __stdcall void GLHook_glEvalCoord1fv(const GLfloat *u)
+extern "C" __stdcall void glEvalCoord1fv(const GLfloat *u)
 {
 	ptr_glEvalCoord1fv(u);
 }
 
-extern "C" __stdcall void GLHook_glEvalCoord2d(GLdouble u, GLdouble v)
+extern "C" __stdcall void glEvalCoord2d(GLdouble u, GLdouble v)
 {
 	ptr_glEvalCoord2d(u, v);
 }
 
-extern "C" __stdcall void GLHook_glEvalCoord2dv(const GLdouble *u)
+extern "C" __stdcall void glEvalCoord2dv(const GLdouble *u)
 {
 	ptr_glEvalCoord2dv(u);
 }
 
-extern "C" __stdcall void GLHook_glEvalCoord2f(GLfloat u, GLfloat v)
+extern "C" __stdcall void glEvalCoord2f(GLfloat u, GLfloat v)
 {
 	ptr_glEvalCoord2f(u, v);
 }
 
-extern "C" __stdcall void GLHook_glEvalCoord2fv(const GLfloat *u)
+extern "C" __stdcall void glEvalCoord2fv(const GLfloat *u)
 {
 	ptr_glEvalCoord2fv(u);
 }
 
-extern "C" __stdcall void GLHook_glEvalMesh1(GLenum mode, GLint i1, GLint i2)
+extern "C" __stdcall void glEvalMesh1(GLenum mode, GLint i1, GLint i2)
 {
 	ptr_glEvalMesh1(mode, i1, i2);
 }
 
-extern "C" __stdcall void GLHook_glEvalMesh2(GLenum mode, GLint i1, GLint i2, GLint j1, GLint j2)
+extern "C" __stdcall void glEvalMesh2(GLenum mode, GLint i1, GLint i2, GLint j1, GLint j2)
 {
 	ptr_glEvalMesh2(mode, i1, i2, j1, j2);
 }
 
-extern "C" __stdcall void GLHook_glEvalPoint1(GLint i)
+extern "C" __stdcall void glEvalPoint1(GLint i)
 {
 	ptr_glEvalPoint1(i);
 }
 
-extern "C" __stdcall void GLHook_glEvalPoint2(GLint i, GLint j)
+extern "C" __stdcall void glEvalPoint2(GLint i, GLint j)
 {
 	ptr_glEvalPoint2(i, j);
 }
 
-extern "C" __stdcall void GLHook_glFeedbackBuffer(GLsizei size, GLenum type, GLfloat *buffer)
+extern "C" __stdcall void glFeedbackBuffer(GLsizei size, GLenum type, GLfloat *buffer)
 {
 	ptr_glFeedbackBuffer(size, type, buffer);
 }
 
-extern "C" __stdcall void GLHook_glFinish(void)
+extern "C" __stdcall void glFinish(void)
 {
 	ptr_glFinish();
 }
 
-extern "C" __stdcall void GLHook_glFlush(void)
+extern "C" __stdcall void glFlush(void)
 {
 	ptr_glFlush();
 }
 
-extern "C" __stdcall void GLHook_glFogf(GLenum pname, GLfloat param)
+extern "C" __stdcall void glFogf(GLenum pname, GLfloat param)
 {
 	ptr_glFogf(pname, param);
 }
 
-extern "C" __stdcall void GLHook_glFogfv(GLenum pname, const GLfloat *params)
+extern "C" __stdcall void glFogfv(GLenum pname, const GLfloat *params)
 {
 	ptr_glFogfv(pname, params);
 }
 
-extern "C" __stdcall void GLHook_glFogi(GLenum pname, GLint param)
+extern "C" __stdcall void glFogi(GLenum pname, GLint param)
 {
 	ptr_glFogi(pname, param);
 }
 
-extern "C" __stdcall void GLHook_glFogiv(GLenum pname, const GLint *params)
+extern "C" __stdcall void glFogiv(GLenum pname, const GLint *params)
 {
 	ptr_glFogiv(pname, params);
 }
 
-extern "C" __stdcall void GLHook_glFrontFace(GLenum mode)
+extern "C" __stdcall void glFrontFace(GLenum mode)
 {
 	ptr_glFrontFace(mode);
 }
 
-extern "C" __stdcall void GLHook_glFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar)
+extern "C" __stdcall void glFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar)
 {
 	ptr_glFrustum(left, right, bottom, top, zNear, zFar);
 }
 
-extern "C" __stdcall void GLHook_glGenBuffersARB(GLsizei n, GLuint *buffers)
+extern "C" __stdcall void glGenBuffersARB(GLsizei n, GLuint *buffers)
 {
 	ptr_glGenBuffersARB(n, buffers);
 }
 
-extern "C" __stdcall GLuint GLHook_glGenLists(GLsizei range)
+extern "C" __stdcall GLuint glGenLists(GLsizei range)
 {
 	return ptr_glGenLists(range);
 }
 
-extern "C" __stdcall void GLHook_glGenTextures(GLsizei n, GLuint *textures)
+extern "C" __stdcall void glGenTextures(GLsizei n, GLuint *textures)
 {
 	ptr_glGenTextures(n, textures);
 }
 
-extern "C" __stdcall void GLHook_glGetBooleanv(GLenum pname, GLboolean *params)
+extern "C" __stdcall void glGetBooleanv(GLenum pname, GLboolean *params)
 {
 	ptr_glGetBooleanv(pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetDoublev(GLenum pname, GLboolean *params)
+extern "C" __stdcall void glGetDoublev(GLenum pname, GLdouble *params)
 {
 	ptr_glGetDoublev(pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetFloatv(GLenum pname, GLboolean *params)
+extern "C" __stdcall void glGetFloatv(GLenum pname, GLfloat *params)
 {
 	ptr_glGetFloatv(pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetIntegerv(GLenum pname, GLboolean *params)
+extern "C" __stdcall void glGetIntegerv(GLenum pname, GLint *params)
 {
 	ptr_glGetIntegerv(pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetClipPlane(GLenum plane, GLdouble *equation)
+extern "C" __stdcall void glGetClipPlane(GLenum plane, GLdouble *equation)
 {
 	ptr_glGetClipPlane(plane, equation);
 }
 
-extern "C" __stdcall GLenum GLHook_glGetError(void)
+extern "C" __stdcall GLenum glGetError(void)
 {
 	return ptr_glGetError();
 }
 
-extern "C" __stdcall void GLHook_glGetLightfv(GLenum light, GLenum pname, GLfloat *params)
+extern "C" __stdcall void glGetLightfv(GLenum light, GLenum pname, GLfloat *params)
 {
 	ptr_glGetLightfv(light, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetLightiv(GLenum light, GLenum pname, GLint *params)
+extern "C" __stdcall void glGetLightiv(GLenum light, GLenum pname, GLint *params)
 {
 	ptr_glGetLightiv(light, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetMapdv(GLenum target, GLenum query, GLdouble *v)
+extern "C" __stdcall void glGetMapdv(GLenum target, GLenum query, GLdouble *v)
 {
 	ptr_glGetMapdv(target, query, v);
 }
 
-extern "C" __stdcall void GLHook_glGetMapfv(GLenum target, GLenum query, GLfloat *v)
+extern "C" __stdcall void glGetMapfv(GLenum target, GLenum query, GLfloat *v)
 {
 	ptr_glGetMapfv(target, query, v);
 }
 
-extern "C" __stdcall void GLHook_glGetMapiv(GLenum target, GLenum query, GLint *v)
+extern "C" __stdcall void glGetMapiv(GLenum target, GLenum query, GLint *v)
 {
 	ptr_glGetMapiv(target, query, v);
 }
 
-extern "C" __stdcall void GLHook_glGetMaterialfv(GLenum face, GLenum pname, GLfloat *params)
+extern "C" __stdcall void glGetMaterialfv(GLenum face, GLenum pname, GLfloat *params)
 {
 	ptr_glGetMaterialfv(face, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetMaterialiv(GLenum face, GLenum pname, GLint *params)
+extern "C" __stdcall void glGetMaterialiv(GLenum face, GLenum pname, GLint *params)
 {
 	ptr_glGetMaterialiv(face, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetPixelMapfv(GLenum map, GLfloat *values)
+extern "C" __stdcall void glGetPixelMapfv(GLenum map, GLfloat *values)
 {
 	ptr_glGetPixelMapfv(map, values);
 }
 
-extern "C" __stdcall void GLHook_glGetPixelMapuiv(GLenum map, GLuint *values)
+extern "C" __stdcall void glGetPixelMapuiv(GLenum map, GLuint *values)
 {
 	ptr_glGetPixelMapuiv(map, values);
 }
 
-extern "C" __stdcall void GLHook_glGetPixelMapusv(GLenum map, GLushort *values)
+extern "C" __stdcall void glGetPixelMapusv(GLenum map, GLushort *values)
 {
 	ptr_glGetPixelMapusv(map, values);
 }
 
-extern "C" __stdcall void GLHook_glGetPointerv(GLenum pname, GLvoid **params)
+extern "C" __stdcall void glGetPointerv(GLenum pname, GLvoid **params)
 {
 	ptr_glGetPointerv(pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetPolygonStipple(GLubyte *mask)
+extern "C" __stdcall void glGetPolygonStipple(GLubyte *mask)
 {
 	ptr_glGetPolygonStipple(mask);
 }
 
-extern "C" __stdcall const GLubyte* GLHook_glGetString(GLenum name)
+extern "C" __stdcall const GLubyte* glGetString(GLenum name)
 {
 	return ptr_glGetString(name);
 }
 
-extern "C" __stdcall void GLHook_glGetTexEnvfv(GLenum target, GLenum pname, GLfloat *params)
+extern "C" __stdcall void glGetTexEnvfv(GLenum target, GLenum pname, GLfloat *params)
 {
 	ptr_glGetTexEnvfv(target, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetTexEnviv(GLenum target, GLenum pname, GLint *params)
+extern "C" __stdcall void glGetTexEnviv(GLenum target, GLenum pname, GLint *params)
 {
 	ptr_glGetTexEnviv(target, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetTexGendv(GLenum coord, GLenum pname, GLdouble *params)
+extern "C" __stdcall void glGetTexGendv(GLenum coord, GLenum pname, GLdouble *params)
 {
 	ptr_glGetTexGendv(coord, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetTexGenfv(GLenum coord, GLenum pname, GLfloat *params)
+extern "C" __stdcall void glGetTexGenfv(GLenum coord, GLenum pname, GLfloat *params)
 {
 	ptr_glGetTexGenfv(coord, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetTexGeniv(GLenum coord, GLenum pname, GLint *params)
+extern "C" __stdcall void glGetTexGeniv(GLenum coord, GLenum pname, GLint *params)
 {
 	ptr_glGetTexGeniv(coord, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLvoid *pixels)
+extern "C" __stdcall void glGetTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLvoid *pixels)
 {
 	ptr_glGetTexImage(target, level, format, type, pixels);
 }
 
-extern "C" __stdcall void GLHook_glGetTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat *params)
+extern "C" __stdcall void glGetTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat *params)
 {
 	ptr_glGetTexLevelParameterfv(target, level, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint *params)
+extern "C" __stdcall void glGetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint *params)
 {
 	ptr_glGetTexLevelParameteriv(target, level, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetTexParameterfv(GLenum target, GLenum pname, GLfloat *params)
+extern "C" __stdcall void glGetTexParameterfv(GLenum target, GLenum pname, GLfloat *params)
 {
 	ptr_glGetTexParameterfv(target, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glGetTexParameteriv(GLenum target, GLenum pname, GLint *params)
+extern "C" __stdcall void glGetTexParameteriv(GLenum target, GLenum pname, GLint *params)
 {
 	ptr_glGetTexParameteriv(target, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glHint(GLenum target, GLenum mode)
+extern "C" __stdcall void glHint(GLenum target, GLenum mode)
 {
 	ptr_glHint(target, mode);
 }
 
-extern "C" __stdcall void GLHook_glIndexd(GLdouble c)
+extern "C" __stdcall void glIndexd(GLdouble c)
 {
 	ptr_glIndexd(c);
 }
 
-extern "C" __stdcall void GLHook_glIndexdv(const GLdouble *c)
+extern "C" __stdcall void glIndexdv(const GLdouble *c)
 {
 	ptr_glIndexdv(c);
 }
 
-extern "C" __stdcall void GLHook_glIndexf(GLfloat c)
+extern "C" __stdcall void glIndexf(GLfloat c)
 {
 	ptr_glIndexf(c);
 }
 
-extern "C" __stdcall void GLHook_glIndexfv(const GLfloat *c)
+extern "C" __stdcall void glIndexfv(const GLfloat *c)
 {
 	ptr_glIndexfv(c);
 }
 
-extern "C" __stdcall void GLHook_glIndexi(GLint c)
+extern "C" __stdcall void glIndexi(GLint c)
 {
 	ptr_glIndexi(c);
 }
 
-extern "C" __stdcall void GLHook_glIndexiv(const GLint *c)
+extern "C" __stdcall void glIndexiv(const GLint *c)
 {
 	ptr_glIndexiv(c);
 }
 
-extern "C" __stdcall void GLHook_glIndexs(GLshort c)
+extern "C" __stdcall void glIndexs(GLshort c)
 {
 	ptr_glIndexs(c);
 }
 
-extern "C" __stdcall void GLHook_glIndexsv(const GLshort *c)
+extern "C" __stdcall void glIndexsv(const GLshort *c)
 {
 	ptr_glIndexsv(c);
 }
 
-extern "C" __stdcall void GLHook_glIndexub(GLubyte c)
+extern "C" __stdcall void glIndexub(GLubyte c)
 {
 	ptr_glIndexub(c);
 }
 
-extern "C" __stdcall void GLHook_glIndexubv(const GLubyte *c)
+extern "C" __stdcall void glIndexubv(const GLubyte *c)
 {
 	ptr_glIndexubv(c);
 }
 
-extern "C" __stdcall void GLHook_glIndexMask(GLuint mask)
+extern "C" __stdcall void glIndexMask(GLuint mask)
 {
 	ptr_glIndexMask(mask);
 }
 
-extern "C" __stdcall void GLHook_glIndexPointer(GLenum type, GLsizei stride, const GLvoid *pointer)
+extern "C" __stdcall void glIndexPointer(GLenum type, GLsizei stride, const GLvoid *pointer)
 {
 	ptr_glIndexPointer(type, stride, pointer);
 }
 
-extern "C" __stdcall void GLHook_glInitNames(void)
+extern "C" __stdcall void glInitNames(void)
 {
 	ptr_glInitNames();
 }
 
-extern "C" __stdcall void GLHook_glInterleavedArrays(GLenum format, GLsizei stride, const GLvoid *pointer)
+extern "C" __stdcall void glInterleavedArrays(GLenum format, GLsizei stride, const GLvoid *pointer)
 {
 	ptr_glInterleavedArrays(format, stride, pointer);
 }
 
-extern "C" __stdcall GLboolean GLHook_glIsEnabled(GLenum cap)
+extern "C" __stdcall GLboolean glIsEnabled(GLenum cap)
 {
 	return ptr_glIsEnabled(cap);
 }
 
-extern "C" __stdcall GLboolean GLHook_glIsList(GLuint list)
+extern "C" __stdcall GLboolean glIsList(GLuint list)
 {
 	return ptr_glIsList(list);
 }
 
-extern "C" __stdcall GLboolean GLHook_glIsTexture(GLuint texture)
+extern "C" __stdcall GLboolean glIsTexture(GLuint texture)
 {
 	return ptr_glIsTexture(texture);
 }
 
-extern "C" __stdcall void GLHook_glLightf(GLenum light, GLenum pname, GLfloat param)
+extern "C" __stdcall void glLightf(GLenum light, GLenum pname, GLfloat param)
 {
 	ptr_glLightf(light, pname, param);
 }
 
-extern "C" __stdcall void GLHook_glLightfv(GLenum light, GLenum pname, const GLfloat *params)
+extern "C" __stdcall void glLightfv(GLenum light, GLenum pname, const GLfloat *params)
 {
 	ptr_glLightfv(light, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glLighti(GLenum light, GLenum pname, GLint param)
+extern "C" __stdcall void glLighti(GLenum light, GLenum pname, GLint param)
 {
 	ptr_glLighti(light, pname, param);
 }
 
-extern "C" __stdcall void GLHook_glLightiv(GLenum light, GLenum pname, const GLint *params)
+extern "C" __stdcall void glLightiv(GLenum light, GLenum pname, const GLint *params)
 {
 	ptr_glLightiv(light, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glLightModelf(GLenum pname, GLfloat *param)
+extern "C" __stdcall void glLightModelf(GLenum pname, GLfloat param)
 {
 	ptr_glLightModelf(pname, param);
 }
 
-extern "C" __stdcall void GLHook_glLightModelfv(GLenum pname, const GLfloat *params)
+extern "C" __stdcall void glLightModelfv(GLenum pname, const GLfloat *params)
 {
 	ptr_glLightModelfv(pname, params);
 }
 
-extern "C" __stdcall void GLHook_glLightModeli(GLenum pname, GLint param)
+extern "C" __stdcall void glLightModeli(GLenum pname, GLint param)
 {
 	ptr_glLightModeli(pname, param);
 }
 
-extern "C" __stdcall void GLHook_glLightModeliv(GLenum pname, const GLint *params)
+extern "C" __stdcall void glLightModeliv(GLenum pname, const GLint *params)
 {
 	ptr_glLightModeliv(pname, params);
 }
 
-extern "C" __stdcall void GLHook_glLineStipple(GLint factor, GLushort pattern)
+extern "C" __stdcall void glLineStipple(GLint factor, GLushort pattern)
 {
 	ptr_glLineStipple(factor, pattern);
 }
 
-extern "C" __stdcall void GLHook_glLineWidth(GLfloat width)
+extern "C" __stdcall void glLineWidth(GLfloat width)
 {
 	ptr_glLineWidth(width);
 }
 
-extern "C" __stdcall void GLHook_glListBase(GLuint base)
+extern "C" __stdcall void glListBase(GLuint base)
 {
 	ptr_glListBase(base);
 }
 
-extern "C" __stdcall void GLHook_glLoadIdentity(void)
+extern "C" __stdcall void glLoadIdentity(void)
 {
 	ptr_glLoadIdentity();
 }
 
-extern "C" __stdcall void GLHook_glLoadMatrixd(const GLdouble *m)
+extern "C" __stdcall void glLoadMatrixd(const GLdouble *m)
 {
 	ptr_glLoadMatrixd(m);
 }
 
-extern "C" __stdcall void GLHook_glLoadMatrixf(const GLfloat *m)
+extern "C" __stdcall void glLoadMatrixf(const GLfloat *m)
 {
 	ptr_glLoadMatrixf(m);
 }
 
-extern "C" __stdcall void GLHook_glLoadName(GLuint name)
+extern "C" __stdcall void glLoadName(GLuint name)
 {
 	ptr_glLoadName(name);
 }
 
-extern "C" __stdcall void GLHook_glLogicOp(GLenum opcode)
+extern "C" __stdcall void glLogicOp(GLenum opcode)
 {
 	ptr_glLogicOp(opcode);
 }
 
-extern "C" __stdcall void GLHook_glMap1d(GLenum target, GLdouble u1, GLdouble u2, GLint stride, GLint order, const GLdouble *points)
+extern "C" __stdcall void glMap1d(GLenum target, GLdouble u1, GLdouble u2, GLint stride, GLint order, const GLdouble *points)
 {
 	ptr_glMap1d(target, u1, u2, stride, order, points);
 }
 
-extern "C" __stdcall void GLHook_glMap1f(GLenum target, GLfloat u1, GLfloat u2, GLint stride, GLint order, const GLfloat *points)
+extern "C" __stdcall void glMap1f(GLenum target, GLfloat u1, GLfloat u2, GLint stride, GLint order, const GLfloat *points)
 {
 	ptr_glMap1f(target, u1, u2, stride, order, points);
 }
 
-extern "C" __stdcall void GLHook_glMap2d(GLenum target, GLdouble u1, GLdouble u2, GLint ustride, GLint uorder, GLdouble v1, GLdouble v2, GLint vstride, GLint vorder, const GLdouble *points)
+extern "C" __stdcall void glMap2d(GLenum target, GLdouble u1, GLdouble u2, GLint ustride, GLint uorder, GLdouble v1, GLdouble v2, GLint vstride, GLint vorder, const GLdouble *points)
 {
 	ptr_glMap2d(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
 }
 
-extern "C" __stdcall void GLHook_glMap2f(GLenum target, GLfloat u1, GLfloat u2, GLint ustride, GLint uorder, GLfloat v1, GLfloat v2, GLint vstride, GLint vorder, const GLfloat *points)
+extern "C" __stdcall void glMap2f(GLenum target, GLfloat u1, GLfloat u2, GLint ustride, GLint uorder, GLfloat v1, GLfloat v2, GLint vstride, GLint vorder, const GLfloat *points)
 {
 	ptr_glMap2f(target, u1, u2, ustride, uorder, v1, v2, vstride, vorder, points);
 }
 
-extern "C" __stdcall void GLHook_glMapGrid1d(GLint un, GLdouble u1, GLdouble u2)
+extern "C" __stdcall void glMapGrid1d(GLint un, GLdouble u1, GLdouble u2)
 {
 	ptr_glMapGrid1d(un, u1, u2);
 }
 
-extern "C" __stdcall void GLHook_glMapGrid1f(GLint un, GLfloat u1, GLfloat u2)
+extern "C" __stdcall void glMapGrid1f(GLint un, GLfloat u1, GLfloat u2)
 {
 	ptr_glMapGrid1f(un, u1, u2);
 }
 
-extern "C" __stdcall void GLHook_glMapGrid2d(GLint un, GLdouble u1, GLdouble u2, GLint vn, GLdouble v1, GLdouble v2)
+extern "C" __stdcall void glMapGrid2d(GLint un, GLdouble u1, GLdouble u2, GLint vn, GLdouble v1, GLdouble v2)
 {
 	ptr_glMapGrid2d(un, u1, u2, vn, v1, v2);
 }
 
-extern "C" __stdcall void GLHook_glMapGrid2f(GLint un, GLfloat u1, GLfloat u2, GLint vn, GLfloat v1, GLfloat v2)
+extern "C" __stdcall void glMapGrid2f(GLint un, GLfloat u1, GLfloat u2, GLint vn, GLfloat v1, GLfloat v2)
 {
 	ptr_glMapGrid2f(un, u1, u2, vn, v1, v2);
 }
 
-extern "C" __stdcall void GLHook_glMaterialf(GLenum face, GLenum pname, GLfloat param)
+extern "C" __stdcall void glMaterialf(GLenum face, GLenum pname, GLfloat param)
 {
 	ptr_glMaterialf(face, pname, param);
 }
 
-extern "C" __stdcall void GLHook_glMaterialfv(GLenum face, GLenum pname, const GLfloat *params)
+extern "C" __stdcall void glMaterialfv(GLenum face, GLenum pname, const GLfloat *params)
 {
 	ptr_glMaterialfv(face, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glMateriali(GLenum face, GLenum pname, GLint param)
+extern "C" __stdcall void glMateriali(GLenum face, GLenum pname, GLint param)
 {
 	ptr_glMateriali(face, pname, param);
 }
 
-extern "C" __stdcall void GLHook_glMaterialiv(GLenum face, GLenum pname, const GLint *params)
+extern "C" __stdcall void glMaterialiv(GLenum face, GLenum pname, const GLint *params)
 {
 	ptr_glMaterialiv(face, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glMatrixMode(GLenum mode)
+extern "C" __stdcall void glMatrixMode(GLenum mode)
 {
 	ptr_glMatrixMode(mode);
 }
 
-extern "C" __stdcall void GLHook_glMultiTexCoord2fARB(GLenum target, GLfloat s, GLfloat t)
+extern "C" __stdcall void glMultiTexCoord2fARB(GLenum target, GLfloat s, GLfloat t)
 {
 	ptr_glMultiTexCoord2fARB(target, s, t);
 }
 
-extern "C" __stdcall void GLHook_glMultMatrixd(const GLdouble *m)
+extern "C" __stdcall void glMultMatrixd(const GLdouble *m)
 {
 	ptr_glMultMatrixd(m);
 }
 
-extern "C" __stdcall void GLHook_glMultMatrixf(const GLdouble *m)
+extern "C" __stdcall void glMultMatrixf(const GLfloat *m)
 {
 	ptr_glMultMatrixf(m);
 }
 
-extern "C" __stdcall void GLHook_glNewList(GLuint list, GLenum mode)
+extern "C" __stdcall void glNewList(GLuint list, GLenum mode)
 {
 	ptr_glNewList(list, mode);
 }
 
-extern "C" __stdcall void GLHook_glNormal3b(GLbyte nx, GLbyte ny, GLbyte nz)
+extern "C" __stdcall void glNormal3b(GLbyte nx, GLbyte ny, GLbyte nz)
 {
 	ptr_glNormal3b( nx,  ny,  nz);
 }
 
-extern "C" __stdcall void GLHook_glNormal3bv(const GLbyte *v)
+extern "C" __stdcall void glNormal3bv(const GLbyte *v)
 {
 	ptr_glNormal3bv( v);
 }
 
-extern "C" __stdcall void GLHook_glNormal3d(GLdouble nx, GLdouble ny, GLdouble nz)
+extern "C" __stdcall void glNormal3d(GLdouble nx, GLdouble ny, GLdouble nz)
 {
 	ptr_glNormal3d(nx, ny, nz);
 }
 
-extern "C" __stdcall void GLHook_glNormal3dv(const GLdouble *v)
+extern "C" __stdcall void glNormal3dv(const GLdouble *v)
 {
 	ptr_glNormal3dv(v);
 }
 
-extern "C" __stdcall void GLHook_glNormal3f(GLfloat nx, GLfloat ny, GLfloat nz)
+extern "C" __stdcall void glNormal3f(GLfloat nx, GLfloat ny, GLfloat nz)
 {
 	ptr_glNormal3f(nx, ny, nz);
 }
 
-extern "C" __stdcall void GLHook_glNormal3fv(const GLfloat *v)
+extern "C" __stdcall void glNormal3fv(const GLfloat *v)
 {
 	ptr_glNormal3fv(v);
 }
 
-extern "C" __stdcall void GLHook_glNormal3i(GLint nx, GLint ny, GLint nz)
+extern "C" __stdcall void glNormal3i(GLint nx, GLint ny, GLint nz)
 {
 	ptr_glNormal3i(nx, ny, nz);
 }
 
-extern "C" __stdcall void GLHook_glNormal3iv(const GLint *v)
+extern "C" __stdcall void glNormal3iv(const GLint *v)
 {
 	ptr_glNormal3iv(v);
 }
 
-extern "C" __stdcall void GLHook_glNormal3s(GLshort nx, GLshort ny, GLshort nz)
+extern "C" __stdcall void glNormal3s(GLshort nx, GLshort ny, GLshort nz)
 {
 	ptr_glNormal3s(nx, ny, nz);
 }
 
-extern "C" __stdcall void GLHook_glNormal3sv(const GLshort *v)
+extern "C" __stdcall void glNormal3sv(const GLshort *v)
 {
 	ptr_glNormal3sv(v);
 }
 
-extern "C" __stdcall void GLHook_glNormalPointer(GLenum type, GLsizei stride, const GLvoid *pointer)
+extern "C" __stdcall void glNormalPointer(GLenum type, GLsizei stride, const GLvoid *pointer)
 {
 	ptr_glNormalPointer(type, stride, pointer);
 }
 
-extern "C" __stdcall void GLHook_glOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar)
+extern "C" __stdcall void glOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar)
 {
 	ptr_glOrtho(left, right, bottom, top, zNear, zFar);
 }
 
-extern "C" __stdcall void GLHook_glPassThrough(GLfloat token)
+extern "C" __stdcall void glPassThrough(GLfloat token)
 {
 	ptr_glPassThrough(token);
 }
 
-extern "C" __stdcall void GLHook_glPixelMapfv(GLenum map, GLsizei mapsize, const GLfloat *values)
+extern "C" __stdcall void glPixelMapfv(GLenum map, GLsizei mapsize, const GLfloat *values)
 {
 	ptr_glPixelMapfv(map, mapsize, values);
 }
 
-extern "C" __stdcall void GLHook_glPixelMapuiv(GLenum map, GLsizei mapsize, const GLuint *values)
+extern "C" __stdcall void glPixelMapuiv(GLenum map, GLsizei mapsize, const GLuint *values)
 {
 	ptr_glPixelMapuiv(map, mapsize, values);
 }
 
-extern "C" __stdcall void GLHook_glPixelMapusv(GLenum map, GLsizei mapsize, const GLushort *values)
+extern "C" __stdcall void glPixelMapusv(GLenum map, GLsizei mapsize, const GLushort *values)
 {
 	ptr_glPixelMapusv(map, mapsize, values);
 }
 
-extern "C" __stdcall void GLHook_glPixelStoref(GLenum pname, GLfloat param)
+extern "C" __stdcall void glPixelStoref(GLenum pname, GLfloat param)
 {
 	ptr_glPixelStoref(pname, param);
 }
 
-extern "C" __stdcall void GLHook_glPixelStorei(GLenum pname, GLint para)
+extern "C" __stdcall void glPixelStorei(GLenum pname, GLint para)
 {
 	ptr_glPixelStorei(pname, para);
 }
 
-extern "C" __stdcall void GLHook_glPixelTransferf(GLenum pname, GLfloat param)
+extern "C" __stdcall void glPixelTransferf(GLenum pname, GLfloat param)
 {
 	ptr_glPixelTransferf(pname, param);
 }
 
-extern "C" __stdcall void GLHook_glPixelTransferi(GLenum pname, GLint param)
+extern "C" __stdcall void glPixelTransferi(GLenum pname, GLint param)
 {
 	ptr_glPixelTransferi(pname, param);
 }
 
-extern "C" __stdcall void GLHook_glPixelZoom(GLfloat xfactor, GLfloat yfactor)
+extern "C" __stdcall void glPixelZoom(GLfloat xfactor, GLfloat yfactor)
 {
 	ptr_glPixelZoom(xfactor, yfactor);
 }
 
-extern "C" __stdcall void GLHook_glPointSize(GLfloat size)
+extern "C" __stdcall void glPointSize(GLfloat size)
 {
 	ptr_glPointSize(size);
 }
 
-extern "C" __stdcall void GLHook_glPolygonMode(GLenum face, GLenum mode)
+extern "C" __stdcall void glPolygonMode(GLenum face, GLenum mode)
 {
 	ptr_glPolygonMode(face, mode);
 }
 
-extern "C" __stdcall void GLHook_glPolygonOffset(GLfloat factor, GLfloat units)
+extern "C" __stdcall void glPolygonOffset(GLfloat factor, GLfloat units)
 {
 	ptr_glPolygonOffset(factor, units);
 }
 
-extern "C" __stdcall void GLHook_glPolygonStipple(const GLubyte *mask)
+extern "C" __stdcall void glPolygonStipple(const GLubyte *mask)
 {
 	ptr_glPolygonStipple(mask);
 }
 
-extern "C" __stdcall void GLHook_glPopAttrib(void)
+extern "C" __stdcall void glPopAttrib(void)
 {
 	ptr_glPopAttrib();
 }
 
-extern "C" __stdcall void GLHook_glPopClientAttrib(void)
+extern "C" __stdcall void glPopClientAttrib(void)
 {
 	ptr_glPopClientAttrib();
 }
 
-extern "C" __stdcall void GLHook_glPopMatrix(void)
+extern "C" __stdcall void glPopMatrix(void)
 {
 	ptr_glPopMatrix();
 }
 
-extern "C" __stdcall void GLHook_glPopName(void)
+extern "C" __stdcall void glPopName(void)
 {
 	ptr_glPopName();
 }
 
-extern "C" __stdcall void GLHook_glPrioritizeTextures(GLsizei n, const GLuint *textures, const GLclampf *priorities)
+extern "C" __stdcall void glPrioritizeTextures(GLsizei n, const GLuint *textures, const GLclampf *priorities)
 {
 	ptr_glPrioritizeTextures(n, textures, priorities);
 }
 
-extern "C" __stdcall void GLHook_glPushAttrib(GLbitfield mask)
+extern "C" __stdcall void glPushAttrib(GLbitfield mask)
 {
 	ptr_glPushAttrib(mask);
 }
 
-extern "C" __stdcall void GLHook_glPushClientAttrib(GLbitfield mask)
+extern "C" __stdcall void glPushClientAttrib(GLbitfield mask)
 {
 	ptr_glPushClientAttrib(mask);
 }
 
-extern "C" __stdcall void GLHook_glPushMatrix(void)
+extern "C" __stdcall void glPushMatrix(void)
 {
 	ptr_glPushMatrix();
 }
 
-extern "C" __stdcall void GLHook_glPushName(GLuint name)
+extern "C" __stdcall void glPushName(GLuint name)
 {
 	ptr_glPushName(name);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos2d(GLdouble x, GLdouble y)
+extern "C" __stdcall void glRasterPos2d(GLdouble x, GLdouble y)
 {
 	ptr_glRasterPos2d(x, y);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos2dv(const GLdouble *v)
+extern "C" __stdcall void glRasterPos2dv(const GLdouble *v)
 {
 	ptr_glRasterPos2dv(v);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos2f(GLfloat x, GLfloat y)
+extern "C" __stdcall void glRasterPos2f(GLfloat x, GLfloat y)
 {
 	ptr_glRasterPos2f(x, y);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos2fv(const GLfloat *v)
+extern "C" __stdcall void glRasterPos2fv(const GLfloat *v)
 {
 	ptr_glRasterPos2fv(v);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos2i(GLint x, GLint y)
+extern "C" __stdcall void glRasterPos2i(GLint x, GLint y)
 {
 	ptr_glRasterPos2i(x, y);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos2iv(const GLint *v)
+extern "C" __stdcall void glRasterPos2iv(const GLint *v)
 {
 	ptr_glRasterPos2iv(v);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos2s(GLshort x, GLshort y)
+extern "C" __stdcall void glRasterPos2s(GLshort x, GLshort y)
 {
 	ptr_glRasterPos2s(x, y);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos2sv(const GLshort *v)
+extern "C" __stdcall void glRasterPos2sv(const GLshort *v)
 {
 	ptr_glRasterPos2sv(v);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos3d(GLdouble x, GLdouble y, GLdouble z)
+extern "C" __stdcall void glRasterPos3d(GLdouble x, GLdouble y, GLdouble z)
 {
 	ptr_glRasterPos3d(x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos3dv(const GLdouble *v)
+extern "C" __stdcall void glRasterPos3dv(const GLdouble *v)
 {
 	ptr_glRasterPos3dv(v);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos3f(GLfloat x, GLfloat y, GLfloat z)
+extern "C" __stdcall void glRasterPos3f(GLfloat x, GLfloat y, GLfloat z)
 {
 	ptr_glRasterPos3f(x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos3fv(const GLfloat *v)
+extern "C" __stdcall void glRasterPos3fv(const GLfloat *v)
 {
 	ptr_glRasterPos3fv(v);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos3i(GLint x, GLint y, GLint z)
+extern "C" __stdcall void glRasterPos3i(GLint x, GLint y, GLint z)
 {
 	ptr_glRasterPos3i(x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos3iv(const GLint *v)
+extern "C" __stdcall void glRasterPos3iv(const GLint *v)
 {
 	ptr_glRasterPos3iv(v);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos3s(GLshort x, GLshort y, GLshort z)
+extern "C" __stdcall void glRasterPos3s(GLshort x, GLshort y, GLshort z)
 {
 	ptr_glRasterPos3s(x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos3sv(const GLshort *v)
+extern "C" __stdcall void glRasterPos3sv(const GLshort *v)
 {
 	ptr_glRasterPos3sv(v);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w)
+extern "C" __stdcall void glRasterPos4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w)
 {
 	ptr_glRasterPos4d(x, y, z, w);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos4dv(const GLdouble *v)
+extern "C" __stdcall void glRasterPos4dv(const GLdouble *v)
 {
 	ptr_glRasterPos4dv(v);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+extern "C" __stdcall void glRasterPos4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
 	ptr_glRasterPos4f(x, y, z, w);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos4fv(const GLfloat *v)
+extern "C" __stdcall void glRasterPos4fv(const GLfloat *v)
 {
 	ptr_glRasterPos4fv(v);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos4i(GLint x, GLint y, GLint z, GLint w)
+extern "C" __stdcall void glRasterPos4i(GLint x, GLint y, GLint z, GLint w)
 {
 	ptr_glRasterPos4i(x, y, z, w);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos4iv(const GLint *v)
+extern "C" __stdcall void glRasterPos4iv(const GLint *v)
 {
 	ptr_glRasterPos4iv(v);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos4s(GLshort x, GLshort y, GLshort z, GLshort w)
+extern "C" __stdcall void glRasterPos4s(GLshort x, GLshort y, GLshort z, GLshort w)
 {
 	ptr_glRasterPos4s(x, y, z, w);
 }
 
-extern "C" __stdcall void GLHook_glRasterPos4sv(const GLshort *v)
+extern "C" __stdcall void glRasterPos4sv(const GLshort *v)
 {
 	ptr_glRasterPos4sv(v);
 }
 
-extern "C" __stdcall void GLHook_glReadBuffer(GLenum mode)
+extern "C" __stdcall void glReadBuffer(GLenum mode)
 {
 	ptr_glReadBuffer(mode);
 }
 
-extern "C" __stdcall void GLHook_glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid *pixels)
+extern "C" __stdcall void glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid *pixels)
 {
 	ptr_glReadPixels(x, y, width, height, format, type, pixels);
 }
 
-extern "C" __stdcall void GLHook_glRectd(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2)
+extern "C" __stdcall void glRectd(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2)
 {
 	ptr_glRectd(x1, y1, x2, y2);
 }
 
-extern "C" __stdcall void GLHook_glRectdv(const GLdouble *v1, const GLdouble *v2)
+extern "C" __stdcall void glRectdv(const GLdouble *v1, const GLdouble *v2)
 {
 	ptr_glRectdv(v1, v2);
 }
 
-extern "C" __stdcall void GLHook_glRectf(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
+extern "C" __stdcall void glRectf(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
 {
 	ptr_glRectf(x1, y1, x2, y2);
 }
 
-extern "C" __stdcall void GLHook_glRectfv(const GLfloat *v1, const GLfloat *v2)
+extern "C" __stdcall void glRectfv(const GLfloat *v1, const GLfloat *v2)
 {
 	ptr_glRectfv(v1, v2);
 }
 
-extern "C" __stdcall void GLHook_glRecti(GLint x1, GLint y1, GLint x2, GLint y2)
+extern "C" __stdcall void glRecti(GLint x1, GLint y1, GLint x2, GLint y2)
 {
 	ptr_glRecti(x1, y1, x2, y2);
 }
 
-extern "C" __stdcall void GLHook_glRectiv(const GLint *v1, const GLint *v2)
+extern "C" __stdcall void glRectiv(const GLint *v1, const GLint *v2)
 {
 	ptr_glRectiv(v1, v2);
 }
 
-extern "C" __stdcall void GLHook_glRects(GLshort x1, GLshort y1, GLshort x2, GLshort y2)
+extern "C" __stdcall void glRects(GLshort x1, GLshort y1, GLshort x2, GLshort y2)
 {
 	ptr_glRects(x1, y1, x2, y2);
 }
 
-extern "C" __stdcall void GLHook_glRectsv(const GLshort *v1, const GLshort *v2)
+extern "C" __stdcall void glRectsv(const GLshort *v1, const GLshort *v2)
 {
 	ptr_glRectsv(v1, v2);
 }
 
-extern "C" __stdcall GLint GLHook_glRenderMode(GLenum mode)
+extern "C" __stdcall GLint glRenderMode(GLenum mode)
 {
 	return ptr_glRenderMode(mode);
 }
 
-extern "C" __stdcall void GLHook_glRotated(GLdouble angle, GLdouble x, GLdouble y, GLdouble z)
+extern "C" __stdcall void glRotated(GLdouble angle, GLdouble x, GLdouble y, GLdouble z)
 {
 	ptr_glRotated(angle, x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
+extern "C" __stdcall void glRotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 {
 	ptr_glRotatef(angle, x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glScaled(GLdouble x, GLdouble y, GLdouble z)
+extern "C" __stdcall void glScaled(GLdouble x, GLdouble y, GLdouble z)
 {
 	ptr_glScaled(x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glScalef(GLfloat x, GLfloat y, GLfloat z)
+extern "C" __stdcall void glScalef(GLfloat x, GLfloat y, GLfloat z)
 {
 	ptr_glScalef(x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glScissor(GLint x, GLint y, GLsizei width, GLsizei height)
+extern "C" __stdcall void glScissor(GLint x, GLint y, GLsizei width, GLsizei height)
 {
 	ptr_glScissor(x, y, width, height);
 }
 
-extern "C" __stdcall void GLHook_glSelectBuffer(GLsizei size, GLuint *buffer)
+extern "C" __stdcall void glSelectBuffer(GLsizei size, GLuint *buffer)
 {
 	ptr_glSelectBuffer(size, buffer);
 }
 
-extern "C" __stdcall void GLHook_glShadeModel(GLenum mode)
+extern "C" __stdcall void glShadeModel(GLenum mode)
 {
 	ptr_glShadeModel(mode);
 }
 
-extern "C" __stdcall void GLHook_glStencilFunc(GLenum func, GLint ref, GLuint mask)
+extern "C" __stdcall void glStencilFunc(GLenum func, GLint ref, GLuint mask)
 {
 	ptr_glStencilFunc(func, ref, mask);
 }
 
-extern "C" __stdcall void GLHook_glStencilMask(GLuint mask)
+extern "C" __stdcall void glStencilMask(GLuint mask)
 {
 	ptr_glStencilMask(mask);
 }
 
-extern "C" __stdcall void GLHook_glStencilOp(GLenum fail, GLenum zfail, GLenum zpass)
+extern "C" __stdcall void glStencilOp(GLenum fail, GLenum zfail, GLenum zpass)
 {
 	ptr_glStencilOp(fail, zfail, zpass);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord1d(GLdouble s)
+extern "C" __stdcall void glTexCoord1d(GLdouble s)
 {
 	ptr_glTexCoord1d(s);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord1dv(const GLdouble *v)
+extern "C" __stdcall void glTexCoord1dv(const GLdouble *v)
 {
 	ptr_glTexCoord1dv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord1f(GLfloat s)
+extern "C" __stdcall void glTexCoord1f(GLfloat s)
 {
 	ptr_glTexCoord1f(s);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord1fv(const GLfloat *v)
+extern "C" __stdcall void glTexCoord1fv(const GLfloat *v)
 {
 	ptr_glTexCoord1fv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord1i(GLint s)
+extern "C" __stdcall void glTexCoord1i(GLint s)
 {
 	ptr_glTexCoord1i(s);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord1iv(const GLint *v)
+extern "C" __stdcall void glTexCoord1iv(const GLint *v)
 {
 	ptr_glTexCoord1iv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord1s(GLshort s)
+extern "C" __stdcall void glTexCoord1s(GLshort s)
 {
 	ptr_glTexCoord1s(s);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord1sv(const GLshort *v)
+extern "C" __stdcall void glTexCoord1sv(const GLshort *v)
 {
 	ptr_glTexCoord1sv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord2d(GLdouble s, GLdouble t)
+extern "C" __stdcall void glTexCoord2d(GLdouble s, GLdouble t)
 {
 	ptr_glTexCoord2d(s, t);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord2dv(const GLdouble *v)
+extern "C" __stdcall void glTexCoord2dv(const GLdouble *v)
 {
 	ptr_glTexCoord2dv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord2f(GLfloat s,  GLfloat t)
+extern "C" __stdcall void glTexCoord2f(GLfloat s,  GLfloat t)
 {
 	ptr_glTexCoord2f(s,  t);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord2fv(const GLfloat *v)
+extern "C" __stdcall void glTexCoord2fv(const GLfloat *v)
 {
 	ptr_glTexCoord2fv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord2i(GLint s, GLint t)
+extern "C" __stdcall void glTexCoord2i(GLint s, GLint t)
 {
 	ptr_glTexCoord2i(s, t);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord2iv(const GLint *v)
+extern "C" __stdcall void glTexCoord2iv(const GLint *v)
 {
 	ptr_glTexCoord2iv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord2s(GLshort s, GLshort t)
+extern "C" __stdcall void glTexCoord2s(GLshort s, GLshort t)
 {
 	ptr_glTexCoord2s(s, t);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord2sv(const GLshort *v)
+extern "C" __stdcall void glTexCoord2sv(const GLshort *v)
 {
 	ptr_glTexCoord2sv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord3d(GLdouble s, GLdouble t, GLdouble r)
+extern "C" __stdcall void glTexCoord3d(GLdouble s, GLdouble t, GLdouble r)
 {
 	ptr_glTexCoord3d(s, t, r);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord3dv(const GLdouble *v)
+extern "C" __stdcall void glTexCoord3dv(const GLdouble *v)
 {
 	ptr_glTexCoord3dv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord3f(GLfloat s, GLfloat t, GLfloat r)
+extern "C" __stdcall void glTexCoord3f(GLfloat s, GLfloat t, GLfloat r)
 {
 	ptr_glTexCoord3f(s, t, r);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord3fv(const GLfloat *v)
+extern "C" __stdcall void glTexCoord3fv(const GLfloat *v)
 {
 	ptr_glTexCoord3fv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord3i(GLint s, GLint t, GLint r)
+extern "C" __stdcall void glTexCoord3i(GLint s, GLint t, GLint r)
 {
 	ptr_glTexCoord3i(s, t, r);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord3iv(const GLint *v)
+extern "C" __stdcall void glTexCoord3iv(const GLint *v)
 {
 	ptr_glTexCoord3iv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord3s(GLshort s, GLshort t, GLshort r)
+extern "C" __stdcall void glTexCoord3s(GLshort s, GLshort t, GLshort r)
 {
 	ptr_glTexCoord3s(s, t, r);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord3sv(const GLshort *v)
+extern "C" __stdcall void glTexCoord3sv(const GLshort *v)
 {
 	ptr_glTexCoord3sv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord4d(GLdouble s, GLdouble t, GLdouble r, GLdouble q)
+extern "C" __stdcall void glTexCoord4d(GLdouble s, GLdouble t, GLdouble r, GLdouble q)
 {
 	ptr_glTexCoord4d(s, t, r, q);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord4dv(const GLdouble *v)
+extern "C" __stdcall void glTexCoord4dv(const GLdouble *v)
 {
 	ptr_glTexCoord4dv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord4f(GLfloat s, GLfloat t, GLfloat r, GLfloat q)
+extern "C" __stdcall void glTexCoord4f(GLfloat s, GLfloat t, GLfloat r, GLfloat q)
 {
 	ptr_glTexCoord4f(s, t, r, q);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord4fv(const GLfloat *v)
+extern "C" __stdcall void glTexCoord4fv(const GLfloat *v)
 {
 	ptr_glTexCoord4fv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord4i(GLint s, GLint t, GLint r, GLint q)
+extern "C" __stdcall void glTexCoord4i(GLint s, GLint t, GLint r, GLint q)
 {
 	ptr_glTexCoord4i(s, t, r, q);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord4iv(const GLint *v)
+extern "C" __stdcall void glTexCoord4iv(const GLint *v)
 {
 	ptr_glTexCoord4iv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord4s(GLshort s, GLshort t, GLshort r, GLshort q)
+extern "C" __stdcall void glTexCoord4s(GLshort s, GLshort t, GLshort r, GLshort q)
 {
 	ptr_glTexCoord4s(s, t, r, q);
 }
 
-extern "C" __stdcall void GLHook_glTexCoord4sv(const GLshort *v)
+extern "C" __stdcall void glTexCoord4sv(const GLshort *v)
 {
 	ptr_glTexCoord4sv(v);
 }
 
-extern "C" __stdcall void GLHook_glTexCoordPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer)
+extern "C" __stdcall void glTexCoordPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer)
 {
 	ptr_glTexCoordPointer(size, type, stride, pointer);
 }
 
-extern "C" __stdcall void GLHook_glTexEnvf(GLenum target, GLenum pname, GLfloat param)
+extern "C" __stdcall void glTexEnvf(GLenum target, GLenum pname, GLfloat param)
 {
 	ptr_glTexEnvf(target, pname, param);
 }
 
-extern "C" __stdcall void GLHook_glTexEnvfv(GLenum target, GLenum pname, const GLfloat *params)
+extern "C" __stdcall void glTexEnvfv(GLenum target, GLenum pname, const GLfloat *params)
 {
 	ptr_glTexEnvfv(target, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glTexEnvi(GLenum target, GLenum pname, GLint param)
+extern "C" __stdcall void glTexEnvi(GLenum target, GLenum pname, GLint param)
 {
 	ptr_glTexEnvi(target, pname, param);
 }
 
-extern "C" __stdcall void GLHook_glTexEnviv(GLenum target, GLenum pname, const GLint *params)
+extern "C" __stdcall void glTexEnviv(GLenum target, GLenum pname, const GLint *params)
 {
 	ptr_glTexEnviv(target, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glTexGend(GLenum coord, GLenum pname, GLdouble param)
+extern "C" __stdcall void glTexGend(GLenum coord, GLenum pname, GLdouble param)
 {
 	ptr_glTexGend(coord, pname, param);
 }
 
-extern "C" __stdcall void GLHook_glTexGendv(GLenum coord, GLenum pname, const GLdouble *params)
+extern "C" __stdcall void glTexGendv(GLenum coord, GLenum pname, const GLdouble *params)
 {
 	ptr_glTexGendv(coord, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glTexGenf(GLenum coord, GLenum pname, GLfloat param)
+extern "C" __stdcall void glTexGenf(GLenum coord, GLenum pname, GLfloat param)
 {
 	ptr_glTexGenf(coord, pname, param);
 }
 
-extern "C" __stdcall void GLHook_glTexGenfv(GLenum coord, GLenum pname, const GLfloat *params)
+extern "C" __stdcall void glTexGenfv(GLenum coord, GLenum pname, const GLfloat *params)
 {
 	ptr_glTexGenfv(coord, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glTexGeni(GLenum coord, GLenum pname, GLint param)
+extern "C" __stdcall void glTexGeni(GLenum coord, GLenum pname, GLint param)
 {
 	ptr_glTexGeni(coord, pname, param);
 }
 
-extern "C" __stdcall void GLHook_glTexGeniv(GLenum coord, GLenum pname, const GLint *params)
+extern "C" __stdcall void glTexGeniv(GLenum coord, GLenum pname, const GLint *params)
 {
 	ptr_glTexGeniv(coord, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glTexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLint format, GLenum type, const GLvoid *pixels)
+extern "C" __stdcall void glTexImage1D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLint border, GLenum format, GLenum type, const GLvoid *pixels)
 {
 	ptr_glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
 }
 
-extern "C" __stdcall void GLHook_glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLint format, GLenum type, const GLvoid *pixels)
+extern "C" __stdcall void glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels)
 {
 	ptr_glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
 }
 
-extern "C" __stdcall void GLHook_glTexParameterf(GLenum target, GLenum pname, GLfloat param)
+extern "C" __stdcall void glTexParameterf(GLenum target, GLenum pname, GLfloat param)
 {
 	ptr_glTexParameterf(target, pname, param);
 }
 
-extern "C" __stdcall void GLHook_glTexParameterfv(GLenum target, GLenum pname, const GLfloat *params)
+extern "C" __stdcall void glTexParameterfv(GLenum target, GLenum pname, const GLfloat *params)
 {
 	ptr_glTexParameterfv(target, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glTexParameteri(GLenum target, GLenum pname, GLint param)
+extern "C" __stdcall void glTexParameteri(GLenum target, GLenum pname, GLint param)
 {
 	ptr_glTexParameteri(target, pname, param);
 }
 
-extern "C" __stdcall void GLHook_glTexParameteriv(GLenum target, GLenum pname, const GLint *params)
+extern "C" __stdcall void glTexParameteriv(GLenum target, GLenum pname, const GLint *params)
 {
 	ptr_glTexParameteriv(target, pname, params);
 }
 
-extern "C" __stdcall void GLHook_glTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type, const GLvoid *pixels)
+extern "C" __stdcall void glTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLsizei width, GLenum format, GLenum type, const GLvoid *pixels)
 {
 	ptr_glTexSubImage1D(target, level, xoffset, width, format, type, pixels);
 }
 
-extern "C" __stdcall void GLHook_glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,const GLvoid *pixels)
+extern "C" __stdcall void glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,const GLvoid *pixels)
 {
 	ptr_glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type,pixels);
 }
 
-extern "C" __stdcall void GLHook_glTranslated(GLdouble x, GLdouble y, GLdouble z)
+extern "C" __stdcall void glTranslated(GLdouble x, GLdouble y, GLdouble z)
 {
 	ptr_glTranslated(x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glTranslatef(GLfloat x, GLfloat y, GLfloat z)
+extern "C" __stdcall void glTranslatef(GLfloat x, GLfloat y, GLfloat z)
 {
 	ptr_glTranslatef(x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glVertex2d(GLdouble x, GLdouble y)
+extern "C" __stdcall void glVertex2d(GLdouble x, GLdouble y)
 {
 	ptr_glVertex2d(x, y);
 }
 
-extern "C" __stdcall void GLHook_glVertex2dv(const GLdouble *v)
+extern "C" __stdcall void glVertex2dv(const GLdouble *v)
 {
 	ptr_glVertex2dv(v);
 }
 
-extern "C" __stdcall void GLHook_glVertex2f(GLfloat x, GLfloat y)
+extern "C" __stdcall void glVertex2f(GLfloat x, GLfloat y)
 {
 	ptr_glVertex2f(x, y);
 }
 
-extern "C" __stdcall void GLHook_glVertex2fv(const GLfloat *v)
+extern "C" __stdcall void glVertex2fv(const GLfloat *v)
 {
 	ptr_glVertex2fv(v);
 }
 
-extern "C" __stdcall void GLHook_glVertex2i(GLint x, GLint y)
+extern "C" __stdcall void glVertex2i(GLint x, GLint y)
 {
 	ptr_glVertex2i(x, y);
 }
 
-extern "C" __stdcall void GLHook_glVertex2iv(const GLint *v)
+extern "C" __stdcall void glVertex2iv(const GLint *v)
 {
 	ptr_glVertex2iv(v);
 }
 
-extern "C" __stdcall void GLHook_glVertex2s(GLshort x, GLshort y)
+extern "C" __stdcall void glVertex2s(GLshort x, GLshort y)
 {
 	ptr_glVertex2s(x, y);
 }
 
-extern "C" __stdcall void GLHook_glVertex2sv(const GLshort *v)
+extern "C" __stdcall void glVertex2sv(const GLshort *v)
 {
 	ptr_glVertex2sv(v);
 }
 
-extern "C" __stdcall void GLHook_glVertex3d(GLdouble x, GLdouble y, GLdouble z)
+extern "C" __stdcall void glVertex3d(GLdouble x, GLdouble y, GLdouble z)
 {
 	ptr_glVertex3d(x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glVertex3dv(const GLdouble *v)
+extern "C" __stdcall void glVertex3dv(const GLdouble *v)
 {
 	ptr_glVertex3dv(v);
 }
 
-extern "C" __stdcall void GLHook_glVertex3f(GLfloat x, GLfloat y, GLfloat z)
+extern "C" __stdcall void glVertex3f(GLfloat x, GLfloat y, GLfloat z)
 {
 	ptr_glVertex3f(x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glVertex3fv(const GLfloat *v)
+extern "C" __stdcall void glVertex3fv(const GLfloat *v)
 {
 	ptr_glVertex3fv(v);
 }
 
-extern "C" __stdcall void GLHook_glVertex3i(GLint x, GLint y, GLint z)
+extern "C" __stdcall void glVertex3i(GLint x, GLint y, GLint z)
 {
 	ptr_glVertex3i(x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glVertex3iv(const GLint *v)
+extern "C" __stdcall void glVertex3iv(const GLint *v)
 {
 	ptr_glVertex3iv(v);
 }
 
-extern "C" __stdcall void GLHook_glVertex3s(GLshort x, GLshort y, GLshort z)
+extern "C" __stdcall void glVertex3s(GLshort x, GLshort y, GLshort z)
 {
 	ptr_glVertex3s(x, y, z);
 }
 
-extern "C" __stdcall void GLHook_glVertex3sv(const GLshort *v)
+extern "C" __stdcall void glVertex3sv(const GLshort *v)
 {
 	ptr_glVertex3sv(v);
 }
 
-extern "C" __stdcall void GLHook_glVertex4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w)
+extern "C" __stdcall void glVertex4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w)
 {
 	ptr_glVertex4d(x, y, z, w);
 }
 
-extern "C" __stdcall void GLHook_glVertex4dv(const GLdouble *v)
+extern "C" __stdcall void glVertex4dv(const GLdouble *v)
 {
 	ptr_glVertex4dv(v);
 }
 
-extern "C" __stdcall void GLHook_glVertex4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+extern "C" __stdcall void glVertex4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
 	ptr_glVertex4f(x, y, z, w);
 }
 
-extern "C" __stdcall void GLHook_glVertex4fv(const GLfloat *v)
+extern "C" __stdcall void glVertex4fv(const GLfloat *v)
 {
 	ptr_glVertex4fv(v);
 }
 
-extern "C" __stdcall void GLHook_glVertex4i(GLint x, GLint y, GLint z, GLint w)
+extern "C" __stdcall void glVertex4i(GLint x, GLint y, GLint z, GLint w)
 {
 	ptr_glVertex4i(x, y, z, w);
 }
 
-extern "C" __stdcall void GLHook_glVertex4iv(const GLint *v)
+extern "C" __stdcall void glVertex4iv(const GLint *v)
 {
 	ptr_glVertex4iv(v);
 }
 
-extern "C" __stdcall void GLHook_glVertex4s(GLshort x, GLshort y, GLshort z, GLshort w)
+extern "C" __stdcall void glVertex4s(GLshort x, GLshort y, GLshort z, GLshort w)
 {
 	ptr_glVertex4s(x, y, z, w);
 }
 
-extern "C" __stdcall void GLHook_glVertex4sv(const GLshort *v)
+extern "C" __stdcall void glVertex4sv(const GLshort *v)
 {
 	ptr_glVertex4sv(v);
 }
 
-extern "C" __stdcall void GLHook_glVertexPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer)
+extern "C" __stdcall void glVertexPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer)
 {
 	ptr_glVertexPointer(size, type, stride, pointer);
 }
 
-extern "C" __stdcall void GLHook_glViewport(GLint x, GLint y, GLsizei width, GLsizei height)
+extern "C" __stdcall void glViewport(GLint x, GLint y, GLsizei width, GLsizei height)
 {
 	ptr_glViewport(x, y, width, height);
 }
 
 #if defined _WIN32 || defined _WIN64
-extern "C" __stdcall int GLHook_wglChoosePixelFormat(HDC hdc, const PIXELFORMATDESCRIPTOR *ppfd)
+extern "C" __stdcall int wglChoosePixelFormat(HDC hdc, const PIXELFORMATDESCRIPTOR *ppfd)
 {
 	return ptr_wglChoosePixelFormat(hdc, ppfd);
 }
 
-extern "C" __stdcall HGLRC GLHook_wglCreateContext(HDC hdc)
+extern "C" __stdcall HGLRC wglCreateContext(HDC hdc)
 {
 	return ptr_wglCreateContext(hdc);
 }
 
-extern "C" __stdcall HGLRC GLHook_wglCreateLayerContext(HDC hdc, int iLayerPlane)
+extern "C" __stdcall HGLRC wglCreateLayerContext(HDC hdc, int iLayerPlane)
 {
 	return ptr_wglCreateLayerContext(hdc, iLayerPlane);
 }
 
-extern "C" __stdcall BOOL GLHook_wglCopyContext(HGLRC hglrcSrc, HGLRC hglrcDst, UINT mask)
+extern "C" __stdcall BOOL wglCopyContext(HGLRC hglrcSrc, HGLRC hglrcDst, UINT mask)
 {
 	return ptr_wglCopyContext(hglrcSrc, hglrcDst,  mask);
 }
 
-extern "C" __stdcall BOOL GLHook_wglDeleteContext(HGLRC hglrc)
+extern "C" __stdcall BOOL wglDeleteContext(HGLRC hglrc)
 {
 	return ptr_wglDeleteContext(hglrc);
 }
 
-extern "C" __stdcall BOOL GLHook_wglDescribeLayerPlane(HDC hdc, int iPixelFormat, int iLayerPlane, UINT nBytes, LPLAYERPLANEDESCRIPTOR plpd)
+extern "C" __stdcall BOOL wglDescribeLayerPlane(HDC hdc, int iPixelFormat, int iLayerPlane, UINT nBytes, LPLAYERPLANEDESCRIPTOR plpd)
 {
 	return ptr_wglDescribeLayerPlane(hdc, iPixelFormat, iLayerPlane,  nBytes, plpd);
 }
 
-extern "C" __stdcall int GLHook_wglDescribePixelFormat(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd)
+extern "C" __stdcall int wglDescribePixelFormat(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd)
 {
 	return ptr_wglDescribePixelFormat(hdc, iPixelFormat,  nBytes,  ppfd);
 }
 
-extern "C" __stdcall HGLRC GLHook_wglGetCurrentContext(void)
+extern "C" __stdcall HGLRC wglGetCurrentContext(void)
 {
 	return ptr_wglGetCurrentContext();
 }
 
-extern "C" __stdcall HDC GLHook_wglGetCurrentDC(void)
+extern "C" __stdcall HDC wglGetCurrentDC(void)
 {
 	return ptr_wglGetCurrentDC();
 }
 
-extern "C" __stdcall PROC GLHook_wglGetDefaultProcAddress(LPCSTR lpszProc)
+extern "C" __stdcall PROC wglGetDefaultProcAddress(LPCSTR lpszProc)
 {
 	return ptr_wglGetDefaultProcAddress(lpszProc);
 }
 
-extern "C" __stdcall int GLHook_wglGetLayerPaletteEntries(HDC hdc, int iLayerPlane, int iStart, int cEntries, COLORREF *pcr)
+extern "C" __stdcall int wglGetLayerPaletteEntries(HDC hdc, int iLayerPlane, int iStart, int cEntries, COLORREF *pcr)
 {
 	return ptr_wglGetLayerPaletteEntries(hdc, iLayerPlane, iStart, cEntries, pcr);
 }
 
-extern "C" __stdcall int GLHook_wglGetPixelFormat(HDC hdc)
+extern "C" __stdcall int wglGetPixelFormat(HDC hdc)
 {
 	return ptr_wglGetPixelFormat(hdc);
 }
 
-extern "C" __stdcall PROC GLHook_wglGetProcAddress(LPCSTR lpszProc)
+extern "C" __stdcall PROC wglGetProcAddress(LPCSTR lpszProc)
 {
 	return ptr_wglGetProcAddress(lpszProc);
 }
 
-extern "C" __stdcall BOOL GLHook_wglMakeCurrent(HDC hdc, HGLRC hglrc)
+extern "C" __stdcall BOOL wglMakeCurrent(HDC hdc, HGLRC hglrc)
 {
 	return ptr_wglMakeCurrent(hdc, hglrc);
 }
 
-extern "C" __stdcall BOOL GLHook_wglRealizeLayerPalette(HDC hdc, int iLayerPlane, BOOL bRealize)
+extern "C" __stdcall BOOL wglRealizeLayerPalette(HDC hdc, int iLayerPlane, BOOL bRealize)
 {
 	return ptr_wglRealizeLayerPalette(hdc, iLayerPlane, bRealize);
 }
 
-extern "C" __stdcall int GLHook_wglSetLayerPaletteEntries(HDC hdc, int iLayerPlane, int iStart, int cEntries, const COLORREF *pcr)
+extern "C" __stdcall int wglSetLayerPaletteEntries(HDC hdc, int iLayerPlane, int iStart, int cEntries, const COLORREF *pcr)
 {
 	return ptr_wglSetLayerPaletteEntries(hdc, iLayerPlane, iStart, cEntries, pcr);
 }
 
-extern "C" __stdcall BOOL GLHook_wglSetPixelFormat(HDC hdc, int iPixelFormat, const PIXELFORMATDESCRIPTOR *ppfd)
+extern "C" __stdcall BOOL wglSetPixelFormat(HDC hdc, int iPixelFormat, const PIXELFORMATDESCRIPTOR *ppfd)
 {
 	return ptr_wglSetPixelFormat(hdc, iPixelFormat, ppfd);
 }
 
-extern "C" __stdcall BOOL GLHook_wglShareLists(HGLRC hglrc1, HGLRC hglrc2)
+extern "C" __stdcall BOOL wglShareLists(HGLRC hglrc1, HGLRC hglrc2)
 {
 	return ptr_wglShareLists(hglrc1, hglrc2);
 }
 
-extern "C" __stdcall BOOL GLHook_wglSwapLayerBuffers(HDC hdc, UINT fuPlanes)
+extern "C" __stdcall BOOL wglSwapLayerBuffers(HDC hdc, UINT fuPlanes)
 {
 	return ptr_wglSwapLayerBuffers(hdc,  fuPlanes);
 }
 
-extern "C" __stdcall void GLHook_wglSwapMultipleBuffers(DWORD dwArg1, DWORD dwArg2)
+extern "C" __stdcall DWORD wglSwapMultipleBuffers(UINT dwArg1, CONST WGLSWAP* dwArg2)
 {
-	ptr_wglSwapMultipleBuffers(dwArg1, dwArg2);
+	return ptr_wglSwapMultipleBuffers(dwArg1, dwArg2);
 }
 
-extern "C" __stdcall BOOL GLHook_wglUseFontBitmapsW(HDC hdc, DWORD first, DWORD count, DWORD listBase)
+extern "C" __stdcall BOOL wglUseFontBitmapsW(HDC hdc, DWORD first, DWORD count, DWORD listBase)
 {
 	return ptr_wglUseFontBitmapsW(hdc, first, count, listBase);
 }
 
-extern "C" __stdcall BOOL GLHook_wglUseFontBitmapsA(HDC hdc, DWORD first, DWORD count, DWORD listBase)
+extern "C" __stdcall BOOL wglUseFontBitmapsA(HDC hdc, DWORD first, DWORD count, DWORD listBase)
 {
 	return ptr_wglUseFontBitmapsA(hdc, first, count, listBase);
 }
 
-extern "C" __stdcall BOOL GLHook_wglUseFontOutlinesW(HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf)
+extern "C" __stdcall BOOL wglUseFontOutlinesW(HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf)
 {
 	return ptr_wglUseFontOutlinesW(hdc, first, count, listBase, deviation, extrusion, format, lpgmf);
 }
 
-extern "C" __stdcall BOOL GLHook_wglUseFontOutlinesA(HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf)
+extern "C" __stdcall BOOL wglUseFontOutlinesA(HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf)
 {
 	return ptr_wglUseFontOutlinesA(hdc, first, count, listBase, deviation, extrusion, format, lpgmf);
 }
 
 #else
 
-extern XVisualInfo* GLHook_glXChooseVisual(Display* dpy, int screen, int* attribList)
+extern XVisualInfo* glXChooseVisual(Display* dpy, int screen, int* attribList)
 {
     return ptr_glXChooseVisual(dpy, screen, attribList);
 }
 
-extern GLXContext GLHook_glXCreateContext(Display* dpy, XVisualInfo* vis, GLXContext shareList, Bool direct)
+extern GLXContext glXCreateContext(Display* dpy, XVisualInfo* vis, GLXContext shareList, Bool direct)
 {
     return ptr_glXCreateContext(dpy, vis, shareList, direct);
 }
 
-extern void GLHook_glXDestroyContext(Display* dpy, GLXContext ctx)
+extern void glXDestroyContext(Display* dpy, GLXContext ctx)
 {
     return ptr_glXDestroyContext(dpy, ctx);
 }
 
-extern Bool GLHook_glXMakeCurrent(Display* dpy, GLXDrawable drawable, GLXContext ctx)
+extern Bool glXMakeCurrent(Display* dpy, GLXDrawable drawable, GLXContext ctx)
 {
     return ptr_glXMakeCurrent(dpy, drawable, ctx);
 }
 
-extern void GLHook_glXCopyContext(Display* dpy, GLXContext src, GLXContext dst, unsigned long mask)
+extern void glXCopyContext(Display* dpy, GLXContext src, GLXContext dst, unsigned long mask)
 {
     return ptr_glXCopyContext(dpy, src, dst, mask);
 }
 
-extern void GLHook_glXSwapBuffers(Display* dpy, GLXDrawable drawable)
+extern void glXSwapBuffers(Display* dpy, GLXDrawable drawable)
 {
     return ptr_glXSwapBuffers(dpy, drawable);
 }
 
-extern GLXPixmap GLHook_glXCreateGLXPixmap(Display* dpy, XVisualInfo* visual, Pixmap pixmap)
+extern GLXPixmap glXCreateGLXPixmap(Display* dpy, XVisualInfo* visual, Pixmap pixmap)
 {
     return ptr_glXCreateGLXPixmap(dpy, visual, pixmap);
 }
 
-extern void GLHook_glXDestroyGLXPixmap(Display* dpy, GLXPixmap pixmap)
+extern void glXDestroyGLXPixmap(Display* dpy, GLXPixmap pixmap)
 {
     return ptr_glXDestroyGLXPixmap(dpy, pixmap);
 }
 
-extern Bool GLHook_glXQueryExtension(Display* dpy, int* errorb, int* event)
+extern Bool glXQueryExtension(Display* dpy, int* errorb, int* event)
 {
     return ptr_glXQueryExtension(dpy, errorb, event);
 }
 
-extern Bool GLHook_glXQueryVersion(Display* dpy, int* maj, int* min)
+extern Bool glXQueryVersion(Display* dpy, int* maj, int* min)
 {
     return ptr_glXQueryVersion(dpy, maj, min);
 }
 
-extern Bool GLHook_glXIsDirect(Display* dpy, GLXContext ctx)
+extern Bool glXIsDirect(Display* dpy, GLXContext ctx)
 {
     return ptr_glXIsDirect(dpy, ctx);
 }
 
-extern int GLHook_glXGetConfig(Display* dpy, XVisualInfo* visual, int attrib, int* value)
+extern int glXGetConfig(Display* dpy, XVisualInfo* visual, int attrib, int* value)
 {
     return ptr_glXGetConfig(dpy, visual, attrib, value);
 }
 
-extern GLXContext GLHook_glXGetCurrentContext(void)
+extern GLXContext glXGetCurrentContext(void)
 {
     return ptr_glXGetCurrentContext();
 }
 
-extern GLXDrawable GLHook_glXGetCurrentDrawable(void)
+extern GLXDrawable glXGetCurrentDrawable(void)
 {
     return ptr_glXGetCurrentDrawable();
 }
 
-extern void GLHook_glXWaitGL(void)
+extern void glXWaitGL(void)
 {
     return ptr_glXWaitGL();
 }
 
-extern void GLHook_glXWaitX(void)
+extern void glXWaitX(void)
 {
     return ptr_glXWaitX();
 }
 
-extern void GLHook_glXUseXFont(Font font, int first, int count, int list)
+extern void glXUseXFont(Font font, int first, int count, int list)
 {
     return ptr_glXUseXFont(font, first, count, list);
 }

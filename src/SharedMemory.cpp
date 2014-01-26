@@ -37,13 +37,13 @@ bool SharedMemory::OpenMemoryMap(std::size_t Size)
     #if defined _WIN32 || defined _WIN64
     if ((hFileMap = OpenFileMapping(FILE_MAP_ALL_ACCESS, false, MapName.c_str())) == nullptr)
     {
-        if (Debug) std::cout << _T("\nCould Not Open Shared Memory Map.\n");
+        if (Debug) std::cout << "\nCould Not Open Shared Memory Map.\n";
         return false;
     }
 
     if ((pData = MapViewOfFile(hFileMap, FILE_MAP_ALL_ACCESS, 0, 0, Size)) == nullptr)
     {
-        if (Debug) std::cout << _T("\nCould Not Map View Of File.\n");
+        if (Debug) std::cout << "\nCould Not Map View Of File.\n";
         CloseHandle(hFileMap);
         return false;
     }
@@ -75,13 +75,13 @@ bool SharedMemory::MapMemory(std::size_t Size)
     #if defined _WIN32 || defined _WIN64
     if ((hFileMap = CreateFileMapping(INVALID_HANDLE_VALUE, nullptr, PAGE_READWRITE, 0, Size, MapName.c_str())) == nullptr)
     {
-        if (Debug) std::cout << _T("\nCould Not Create Shared Memory Map.\n");
+        if (Debug) std::cout << "\nCould Not Create Shared Memory Map.\n";
         return false;
     }
 
     if ((pData = MapViewOfFile(hFileMap, FILE_MAP_ALL_ACCESS, 0, 0, Size)) == nullptr)
     {
-        if (Debug) std::cout << _T("\nCould Not Map View Of File.\n");
+        if (Debug) std::cout << "\nCould Not Map View Of File.\n";
         CloseHandle(hFileMap);
         return false;
     }
@@ -116,7 +116,7 @@ bool SharedMemory::ReleaseMemory()
         pData = nullptr;
         if (Result && Debug)
         {
-            std::cout << _T("\nMemory Un-Mapped Successfully.\n");
+            std::cout << "\nMemory Un-Mapped Successfully.\n";
         }
     }
 
@@ -126,7 +126,7 @@ bool SharedMemory::ReleaseMemory()
         {
             hFileMap = nullptr;
             Result = Result && true;
-            if (Debug) std::cout << _T("\nMemory Map Closed Successfully.\n");
+            if (Debug) std::cout << "\nMemory Map Closed Successfully.\n";
         }
     }
 
