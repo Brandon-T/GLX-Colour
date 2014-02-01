@@ -33,8 +33,6 @@ extern std::unique_ptr<SharedMemory> SharedImageData;
 
 extern void GetDesktopResolution(int &width, int &height);
 
-extern bool InitializeAll();
-
 extern bool CreateSharedMemory(int ProcessId);
 
 extern bool OpenSharedMemory(int ProcessId);

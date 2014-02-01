@@ -20,7 +20,6 @@
 #include <iostream>
 #include "Bitmap.hpp"
 
-unsigned int Texture = 0;
 SMARTInfo* SmartGlobal = nullptr;
 bool SmartDebugEnabled = false;
 bool SmartOpenGLEnabled = true;
@@ -57,7 +56,7 @@ extern "C" void SMARTPluginInit(SMARTInfo* ptr, bool* ReplaceButtons, int* Butto
         *ReplaceButtons = true;
         char** ButtonTexts = new char*[2];
         ButtonTexts[0] = const_cast<char*>("Disable OpenGL_Enable OpenGL");
-        ButtonTexts[1] = const_cast<char*>("Enable Debug_Disable Debug");
+        ButtonTexts[1] = const_cast<char*>("Enable Debug_Disable glDebug");
 
         int* IDs = new int[2];
         IDs[0] = 100;
@@ -67,40 +66,5 @@ extern "C" void SMARTPluginInit(SMARTInfo* ptr, bool* ReplaceButtons, int* Butto
         *ButtonText = ButtonTexts;
         *ButtonIDs = IDs;
         *ButtonCallback = &SMARTButtonPressed;
-    }
-}
-
-void BltSmartBuffer()
-{
-    if (SmartGlobal != nullptr)
-    {
-        if (Texture == 0)
-        {
-            Texture = LoadTexture(SmartGlobal->dbg, SmartGlobal->width, SmartGlobal->height, GL_TEXTURE_RECTANGLE);
-        }
-        else
-        {
-            std::vector<std::uint8_t> Pixels(SmartGlobal->width * SmartGlobal->height * 4);
-            void* P = Pixels.data();
-            FlipImageBytes(SmartGlobal->dbg, P, SmartGlobal->width, SmartGlobal->height);
-            ptr_glEnable(GL_TEXTURE_RECTANGLE);
-            ptr_glBindTexture(GL_TEXTURE_RECTANGLE, Texture);
-            ptr_glTexSubImage2D(GL_TEXTURE_RECTANGLE, 0, 0, 0, SmartGlobal->width, SmartGlobal->height, GL_BGRA, GL_UNSIGNED_BYTE, Pixels.data());
-            ptr_glDisable(GL_TEXTURE_RECTANGLE);
-        }
-
-        std::uint8_t* Ptr = (std::uint8_t*)SmartGlobal->dbg;
-        for (int I = 0; I < SmartGlobal->height; ++I)
-        {
-            for (int J = 0; J < SmartGlobal->width; ++J)
-            {
-                std::uint8_t B = *(Ptr++);
-                std::uint8_t G = *(Ptr++);
-                std::uint8_t R = *(Ptr++);
-                *(Ptr++) = (B == 0 && G == 0 && R == 0) ? 0 : 0xFF;
-            }
-        }
-
-        DrawTexture(GL_TEXTURE_RECTANGLE, Texture, 0, 0, SmartGlobal->width, SmartGlobal->height, SmartGlobal->width, SmartGlobal->height);
     }
 }

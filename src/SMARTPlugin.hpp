@@ -35,11 +35,8 @@ typedef struct
 
 typedef void (*_SMARTPluginInit)(SMARTInfo* ptr, bool* ReplaceButtons, int* ButtonCount, char*** ButtonText, int** ButtonIDs, _SMARTButtonPressed* ButtonCallback);
 
-extern unsigned int Texture;
 extern SMARTInfo* SmartGlobal;
 extern bool SmartDebugEnabled;
 extern bool SmartOpenGLEnabled;
-void BltSmartBuffer();
-void FlipImageBytes(void* In, void* &Out, int width, int height, unsigned int Bpp = 32);
 
 #endif
