@@ -1,51 +1,35 @@
-/**  © 2013, Brandon T. All Rights Reserved.
-  *
-  *  This file is part of the GLX Library.
-  *  GLX is free software: you can redistribute it and/or modify
-  *  it under the terms of the GNU General Public License as published by
-  *  the Free Software Foundation, either version 3 of the License, or
-  *  (at your option) any later version.
-  *
-  *  GLX is distributed in the hope that it will be useful,
-  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  *  GNU General Public License for more details.
-  *
-  *  You should have received a copy of the GNU General Public License
-  *  along with GLX.  If not, see <http://www.gnu.org/licenses/>.
-  */
-
-#ifndef EXPORTS_HPP_INCLUDED
-#define EXPORTS_HPP_INCLUDED
-
-#include <stdexcept>
-#include <cstring>
-#include "Platform.hpp"
+#ifndef EXPORTS_H_INCLUDED
+#define EXPORTS_H_INCLUDED
 
 #if defined _WIN32 || defined _WIN64
+#include <windows.h>
 #include <GL/gl.h>
 #include <GL/glext.h>
 #else
+#include <dlfcn.h>
 #include <GL/glx.h>
 #include <GL/glxext.h>
-#endif
+#define __stdcall
+#endif // defined
 
-extern Library* OriginalGL;
-extern "C" bool __stdcall Initialize(void);
-extern "C" bool __stdcall DeInitialize(void);
+#include <stdbool.h>
+#include <string.h>
+#include <stdio.h>
+
+
+extern void* module;
+
+extern bool Initialize(void);
+extern bool DeInitialize(void);
 
 extern void (__stdcall *ptr_glAccum) (GLenum op, GLfloat value);
-extern void (__stdcall *ptr_glActiveTextureARB) (GLenum texture);
 extern void (__stdcall *ptr_glAlphaFunc) (GLenum func, GLclampf ref);
 extern GLboolean (__stdcall *ptr_glAreTexturesResident) (GLsizei n, const GLuint *textures, GLboolean *residences);
 extern void (__stdcall *ptr_glArrayElement) (GLint index);
 extern void (__stdcall *ptr_glBegin) (GLenum mode);
-extern void (__stdcall *ptr_glBindBufferARB) (GLenum target, GLuint buffer);
 extern void (__stdcall *ptr_glBindTexture) (GLenum target, GLuint texture);
 extern void (__stdcall *ptr_glBitmap) (GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove, GLfloat ymove, const GLubyte *bitmap);
 extern void (__stdcall *ptr_glBlendFunc) (GLenum sfactor, GLenum dfactor);
-extern void (__stdcall *ptr_glBufferDataARB) (GLenum target, GLsizeiptrARB size, const GLvoid *data, GLenum usage);
-extern void (__stdcall *ptr_glBufferSubDataARB) (GLenum target, GLintptrARB offset, GLsizeiptrARB size, const GLvoid *data);
 extern void (__stdcall *ptr_glCallList) (GLuint list);
 extern void (__stdcall *ptr_glCallLists) (GLsizei n, GLenum type, const GLvoid *lists);
 extern void (__stdcall *ptr_glClear) (GLbitfield mask);
@@ -107,7 +91,6 @@ extern void (__stdcall *ptr_glDrawArrays) (GLenum mode, GLint first, GLsizei cou
 extern void (__stdcall *ptr_glDrawBuffer) (GLenum mode);
 extern void (__stdcall *ptr_glDrawElements) (GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
 extern void (__stdcall *ptr_glDrawPixels) (GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels);
-//extern void (__stdcall *ptr_glDebugEntry) (DWORD dwArg1, DWORD dwArg2);
 extern void (__stdcall *ptr_glEdgeFlag) (GLboolean flag);
 extern void (__stdcall *ptr_glEdgeFlagv) (const GLboolean *flag);
 extern void (__stdcall *ptr_glEdgeFlagPointer) (GLsizei stride, const GLvoid *pointer);
@@ -136,7 +119,6 @@ extern void (__stdcall *ptr_glFogi) (GLenum pname, GLint param);
 extern void (__stdcall *ptr_glFogiv) (GLenum pname, const GLint *params);
 extern void (__stdcall *ptr_glFrontFace) (GLenum mode);
 extern void (__stdcall *ptr_glFrustum) (GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
-extern void (__stdcall *ptr_glGenBuffersARB) (GLsizei n, GLuint *buffers);
 extern GLuint (__stdcall *ptr_glGenLists) (GLsizei range);
 extern void (__stdcall *ptr_glGenTextures) (GLsizei n, GLuint *textures);
 extern void (__stdcall *ptr_glGetBooleanv) (GLenum pname, GLboolean *params);
@@ -215,7 +197,6 @@ extern void (__stdcall *ptr_glMaterialfv) (GLenum face, GLenum pname, const GLfl
 extern void (__stdcall *ptr_glMateriali) (GLenum face, GLenum pname, GLint param);
 extern void (__stdcall *ptr_glMaterialiv) (GLenum face, GLenum pname, const GLint *params);
 extern void (__stdcall *ptr_glMatrixMode) (GLenum mode);
-extern void (__stdcall *ptr_glMultiTexCoord2fARB) (GLenum target, GLfloat s, GLfloat t);
 extern void (__stdcall *ptr_glMultMatrixd) (const GLdouble *m);
 extern void (__stdcall *ptr_glMultMatrixf) (const GLfloat *m);
 extern void (__stdcall *ptr_glNewList) (GLuint list, GLenum mode);
@@ -378,6 +359,7 @@ extern void (__stdcall *ptr_glVertex4sv) (const GLshort *v);
 extern void (__stdcall *ptr_glVertexPointer) (GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
 extern void (__stdcall *ptr_glViewport) (GLint x, GLint y, GLsizei width, GLsizei height);
 
+
 #if defined _WIN32 || defined _WIN64
 extern int (__stdcall *ptr_wglChoosePixelFormat) (HDC hdc, const PIXELFORMATDESCRIPTOR *ppfd);
 extern HGLRC (__stdcall *ptr_wglCreateContext) (HDC hdc);
@@ -396,10 +378,8 @@ extern BOOL (__stdcall *ptr_wglMakeCurrent) (HDC hdc, HGLRC hglrc);
 extern BOOL (__stdcall *ptr_wglRealizeLayerPalette) (HDC hdc, int iLayerPlane, BOOL bRealize);
 extern int (__stdcall *ptr_wglSetLayerPaletteEntries) (HDC hdc, int iLayerPlane, int iStart, int cEntries, const COLORREF *pcr);
 extern BOOL (__stdcall *ptr_wglSetPixelFormat) (HDC hdc, int iPixelFormat, const PIXELFORMATDESCRIPTOR *ppfd);
-extern BOOL (__stdcall *ptr_wglShareLists) (HGLRC hglrc1, HGLRC hglrc2);
 extern BOOL (__stdcall *ptr_wglSwapBuffers) (HDC hdc);
 extern BOOL (__stdcall *ptr_wglSwapLayerBuffers) (HDC hdc, UINT fuPlanes);
-extern DWORD (__stdcall *ptr_wglSwapMultipleBuffers) (UINT dwArg1, CONST WGLSWAP* dwArg2);
 extern BOOL (__stdcall *ptr_wglUseFontBitmapsW) (HDC hdc, DWORD first, DWORD count, DWORD listBase);
 extern BOOL (__stdcall *ptr_wglUseFontBitmapsA) (HDC hdc, DWORD first, DWORD count, DWORD listBase);
 extern BOOL (__stdcall *ptr_wglUseFontOutlinesW) (HDC hdc, DWORD first, DWORD count, DWORD listBase, FLOAT deviation, FLOAT extrusion, int format, LPGLYPHMETRICSFLOAT lpgmf);
@@ -407,23 +387,44 @@ extern BOOL (__stdcall *ptr_wglUseFontOutlinesA) (HDC hdc, DWORD first, DWORD co
 
 #else
 
+extern GLXFBConfig* (*ptr_glXChooseFBConfig) (Display* dpy, int screen, const int* attrib_list, int* nelements);
 extern XVisualInfo* (*ptr_glXChooseVisual) (Display* dpy, int screen, int* attribList);
-extern GLXContext (*ptr_glXCreateContext) (Display* dpy, XVisualInfo* vis, GLXContext shareList, Bool direct);
-extern void (*ptr_glXDestroyContext) (Display* dpy, GLXContext ctx);
-extern Bool (*ptr_glXMakeCurrent) (Display* dpy, GLXDrawable drawable, GLXContext ctx);
 extern void (*ptr_glXCopyContext) (Display* dpy, GLXContext src, GLXContext dst, unsigned long mask);
-extern void (*ptr_glXSwapBuffers) (Display* dpy, GLXDrawable drawable);
-extern GLXPixmap (*ptr_glXCreateGLXPixmap) (Display* dpy, XVisualInfo* visual, Pixmap pixmap);
+extern GLXContext (*ptr_glXCreateContext) (Display* dpy, XVisualInfo* vis, GLXContext shareList, Bool direct);
+extern GLXPixmap (*ptr_glXCreatePixmap) (Display* dpy, GLXFBConfig config, Pixmap pixmap, const int* attrib_list);
+extern GLXContext (*ptr_glXCreateNewContext) (Display* dpy, GLXFBConfig config, int render_type, GLXContext share_list, Bool direct);
+extern GLXPbuffer (*ptr_glXCreatePbuffer) (Display* dpy, GLXFBConfig config, const int* attrib_list);
+extern GLXWindow (*ptr_glXCreateWindow) (Display* dpy, GLXFBConfig config, Window win, const int* attrib_list);
+extern void (*ptr_glXDestroyContext) (Display* dpy, GLXContext ctx);
 extern void (*ptr_glXDestroyGLXPixmap) (Display* dpy, GLXPixmap pixmap);
-extern Bool (*ptr_glXQueryExtension) (Display* dpy, int* errorb, int* event);
-extern Bool (*ptr_glXQueryVersion) (Display* dpy, int* maj, int* min);
-extern Bool (*ptr_glXIsDirect) (Display* dpy, GLXContext ctx);
+extern void (*ptr_glXDestroyPbuffer) (Display* dpy, GLXPbuffer pbuf);
+extern void (*ptr_glXDestroyPixmap) (Display* dpy, GLXPixmap pixmap);
+extern void (*ptr_glXDestroyWindow ) (Display* dpy, GLXWindow win);
+extern const char* (*ptr_glXGetClientString) (Display*  dpy, int name);
 extern int (*ptr_glXGetConfig) (Display* dpy, XVisualInfo* visual, int attrib, int* value);
 extern GLXContext (*ptr_glXGetCurrentContext) (void);
+extern Display* (*ptr_glXGetCurrentDisplay) (void);
 extern GLXDrawable (*ptr_glXGetCurrentDrawable) (void);
+extern GLXDrawable (*ptr_glXGetCurrentReadDrawable) (void);
+extern const char* (*ptr_glXGetDriverConfig) (const char* driverName);
+extern GLXFBConfig* (*ptr_glXGetFBConfigs) (Display* dpy, int screen, int* nelements);
+extern __GLXextFuncPtr (*ptr_glXGetProcAddress) (const GLubyte* procName);
+extern void (*ptr_glXGetSelectedEvent) (Display* dpy, GLXDrawable draw, unsigned long* event_mask);
+extern XVisualInfo* (*ptr_glXGetVisualFromFBConfig) (Display* dpy, GLXFBConfig config);
+extern Bool (*ptr_glXIsDirect) (Display* dpy, GLXContext ctx);
+extern Bool (*ptr_glXMakeContextCurrent) (Display* dpy, GLXDrawable draw, GLXDrawable read, GLXContext ctx);
+extern Bool (*ptr_glXMakeCurrent) (Display* dpy, GLXDrawable drawable, GLXContext ctx);
+extern int (*ptr_glXQueryContext) (Display* dpy, GLXContext ctx, int attribute, int* value);
+extern void (*ptr_glXQueryDrawable) (Display* dpy, GLXDrawable draw, int attribute, unsigned int* value);
+extern Bool (*ptr_glXQueryExtension) (Display* dpy, int* errorb, int* event);
+extern const char* (*ptr_glXQueryExtensionsString) (Display* dpy, int screen);
+extern const char* (*ptr_glXQueryServerString) (Display* dpy, int screen, int name);
+extern Bool (*ptr_glXQueryVersion) (Display* dpy, int* maj, int* min);
+extern void (*ptr_glXSelectEvent) (Display* dpy, GLXDrawable drawable, unsigned long mask);
+extern void (*ptr_glXSwapBuffers) (Display* dpy, GLXDrawable drawable);
+extern void (*ptr_glXUseXFont) (Font font, int first, int count, int list);
 extern void (*ptr_glXWaitGL) (void);
 extern void (*ptr_glXWaitX) (void);
-extern void (*ptr_glXUseXFont) (Font font, int first, int count, int list);
-#endif
+#endif // defined
 
-#endif // EXPORTS_HPP_INCLUDED
+#endif // EXPORTS_H_INCLUDED

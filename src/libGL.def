@@ -1,25 +1,20 @@
 ;     @Author : Brandon T.
 ;
-;     @param  : GLHook Definition File.
+;     @param  : OpenGL32 Definition File.
 ;     @param  : Info From MSDN Documentation.
+;     -Wl,--kill-at -d --input-def libGL.def
 
 
-LIBRARY GLHook
-DESCRIPTION "GLHook Definition File"
 EXPORTS
 
 glAccum
-glActiveTextureARB
 glAlphaFunc
 glAreTexturesResident
 glArrayElement
 glBegin
-glBindBufferARB
 glBindTexture
 glBitmap
 glBlendFunc
-glBufferDataARB
-glBufferSubDataARB
 glCallList
 glCallLists
 glClear
@@ -109,7 +104,6 @@ glFogi
 glFogiv
 glFrontFace
 glFrustum
-glGenBuffersARB
 glGenLists
 glGenTextures
 glGetBooleanv
@@ -188,7 +182,6 @@ glMaterialfv
 glMateriali
 glMaterialiv
 glMatrixMode
-glMultiTexCoord2fARB
 glMultMatrixd
 glMultMatrixf
 glNewList
@@ -367,10 +360,8 @@ wglMakeCurrent
 wglRealizeLayerPalette
 wglSetLayerPaletteEntries
 wglSetPixelFormat
-wglShareLists
 wglSwapBuffers
 wglSwapLayerBuffers
-wglSwapMultipleBuffers
 wglUseFontBitmapsW
 wglUseFontBitmapsA
 wglUseFontOutlinesW
