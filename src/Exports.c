@@ -29,22 +29,28 @@ unsigned int WindowToPID(const void* NativeWindow)
     GetWindowThreadProcessId((HWND)NativeWindow, &PID);
     return PID;
     #else
-    Atom _NET_WM_PID = XInternAtom(dsp, "_NET_WM_PID", True);
+	Display* dsp = XOpenDisplay(NULL);
+	if (dsp)
+	{
+		Atom _NET_WM_PID = XInternAtom(dsp, "_NET_WM_PID", True);
 
-    Atom actualType;
-    int actualFormat;
-    unsigned char* propertyValue = NULL;
-    unsigned long numItems, bytesAfter;
+		Atom actualType;
+		int actualFormat;
+		unsigned char* propertyValue = NULL;
+		unsigned long numItems, bytesAfter;
 
-    if (XGetWindowProperty(dsp, wnd, _NET_WM_PID, 0, 1, false, XA_CARDINAL, &actualType, &actualFormat, &numItems, &bytesAfter, &propertyValue) == Success)
-    {
-        if (propertyValue)
-        {
-            int pid = *((unsigned long*)propertyValue);
-            XFree(propertyValue);
-            return pid;
-        }
-    }
+		if (XGetWindowProperty(dsp, (Window)NativeWindow, _NET_WM_PID, 0, 1, false, XA_CARDINAL, &actualType, &actualFormat, &numItems, &bytesAfter, &propertyValue) == Success)
+		{
+			if (propertyValue)
+			{
+				int pid = *((unsigned long*)propertyValue);
+				XFree(propertyValue);
+				XCloseDisplay(dsp);
+				return pid;
+			}
+		}
+		XCloseDisplay(dsp);
+	}
     return 0;
     #endif
 }
@@ -57,7 +63,7 @@ bool IsWindowMinimised(const void* NativeWindow)
     Display* dsp = XOpenDisplay(NULL);
     if (dsp)
     {
-        bool res = IsMinimised(dsp, NativeWindow);
+        bool res = IsMinimised(dsp, (Window)NativeWindow);
         XCloseDisplay(dsp);
         return res;
     }
