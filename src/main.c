@@ -59,8 +59,10 @@ void __swapBuffers(void* dsp, unsigned long wnd)
     {
         if (!SharedImageData.hFileMap || !SharedImageData.pData)
         {
-            OpenSharedMemory(getpid()) || CreateSharedMemory(getpid());
-            #if !defined _WIN32 && !defined _WIN64
+            #if defined _WIN32 || defined _WIN64
+            OpenSharedMemory((uintptr_t)WindowFromDC(dsp)) || CreateSharedMemory((uintptr_t)WindowFromDC(dsp));
+            #else
+            OpenSharedMemory((uintptr_t)wnd) || CreateSharedMemory((uintptr_t)wnd);
             ftruncate(SharedImageData.hFileMap, SharedImageData.Size);
             #endif // defined
         }
@@ -70,7 +72,7 @@ void __swapBuffers(void* dsp, unsigned long wnd)
         if (!IsMinimised(dsp, wnd))
         {
             EnableDrawing(&Drawing[0], &Drawing[1], &Drawing[2], &PointSize);
-            void* DbgPtr = ((uint8_t*)SharedImageData.pData) + SharedImageSize;
+            void* DbgPtr = ((uint8_t*)SharedImageData.pData) + (SharedImageData.Size / 2);
             BlitBuffer(DbgPtr, ViewPort[2], ViewPort[3]);
             DisableDrawing(Drawing[0], Drawing[1], Drawing[2], PointSize);
         }
@@ -91,7 +93,7 @@ extern __stdcall BOOL wglSwapBuffers(HDC hdc)
 
 extern void glXSwapBuffers(Display* dpy, GLXDrawable drawable)
 {
-    __swapBuffers(dpy, XRootWindow(dpy, 0));
+    __swapBuffers(dpy, drawable);
     return ptr_glXSwapBuffers(dpy, drawable);
 }
 #endif // defined

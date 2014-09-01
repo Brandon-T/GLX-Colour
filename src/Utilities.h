@@ -50,9 +50,9 @@ extern SharedMemory SharedImageData;
 
 extern void GetDesktopResolution(int* width, int* height);
 
-extern bool CreateSharedMemory(int pid);
+extern bool CreateSharedMemory(uintptr_t id);
 
-extern bool OpenSharedMemory(int pid);
+extern bool OpenSharedMemory(uintptr_t id);
 
 extern bool UnMapSharedMemory();
 

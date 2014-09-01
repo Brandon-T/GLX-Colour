@@ -240,27 +240,25 @@ void GetDesktopResolution(int* width, int* height)
     #endif // defined
 }
 
-bool CreateSharedMemory(int pid)
+bool CreateSharedMemory(uintptr_t id)
 {
     int w = 0, h = 0;
     GetDesktopResolution(&w, &h);
 
     __FreeMemoryMap(&SharedImageData);
-    sprintf(SharedImageData.MapName, "%s%d", SharedImageName, pid);
+    sprintf(SharedImageData.MapName, "%s%p", SharedImageName, (void*)id);
     SharedImageData.Size = (!w || !h) ? TotalImageSize : w * h * 4 * 2;
-
     return __CreateMemoryMap(&SharedImageData);
 }
 
-bool OpenSharedMemory(int pid)
+bool OpenSharedMemory(uintptr_t id)
 {
     int w = 0, h = 0;
     GetDesktopResolution(&w, &h);
 
     __FreeMemoryMap(&SharedImageData);
-    sprintf(SharedImageData.MapName, "%s%d", SharedImageName, pid);
+    sprintf(SharedImageData.MapName, "%s%p", SharedImageName, (void*)id);
     SharedImageData.Size = (!w || !h) ? TotalImageSize : w * h * 4 * 2;
-
     return __OpenMemoryMap(&SharedImageData);
 }
 
